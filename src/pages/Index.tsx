@@ -6,6 +6,7 @@ import FilterWidget from '@/components/FilterWidget';
 import Catalog from '@/components/Catalog';
 import { FilterProvider } from '@/context/FilterContext';
 import { LanguageProvider, useLanguage } from '@/context/LanguageContext';
+import { StoreProvider } from '@/context/StoreContext';
 
 const AppContent = () => {
   const { t } = useLanguage();
@@ -66,11 +67,13 @@ const AppContent = () => {
 };
 
 const Index = () => (
-  <LanguageProvider>
-    <FilterProvider>
-      <AppContent />
-    </FilterProvider>
-  </LanguageProvider>
+  <StoreProvider>
+    <LanguageProvider>
+      <FilterProvider>
+        <AppContent />
+      </FilterProvider>
+    </LanguageProvider>
+  </StoreProvider>
 );
 
 export default Index;
