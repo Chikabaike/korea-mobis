@@ -14,7 +14,129 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      brands: {
+        Row: {
+          created_at: string
+          id: string
+          models: Json
+          name: string
+          position: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          models?: Json
+          name: string
+          position?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          models?: Json
+          name?: string
+          position?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          position: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          position?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          position?: number
+        }
+        Relationships: []
+      }
+      parts: {
+        Row: {
+          cars: Json
+          category: string
+          compatibility: Json
+          created_at: string
+          id: string
+          image: string
+          name: string
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          cars?: Json
+          category: string
+          compatibility?: Json
+          created_at?: string
+          id?: string
+          image?: string
+          name: string
+          price?: number
+          updated_at?: string
+        }
+        Update: {
+          cars?: Json
+          category?: string
+          compatibility?: Json
+          created_at?: string
+          id?: string
+          image?: string
+          name?: string
+          price?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          address_kg: string
+          address_ru: string
+          id: number
+          phone: string
+          promo_kg: string
+          promo_ru: string
+          updated_at: string
+          whatsapp: string
+          work_hours_kg: string
+          work_hours_ru: string
+        }
+        Insert: {
+          address_kg?: string
+          address_ru?: string
+          id?: number
+          phone?: string
+          promo_kg?: string
+          promo_ru?: string
+          updated_at?: string
+          whatsapp?: string
+          work_hours_kg?: string
+          work_hours_ru?: string
+        }
+        Update: {
+          address_kg?: string
+          address_ru?: string
+          id?: number
+          phone?: string
+          promo_kg?: string
+          promo_ru?: string
+          updated_at?: string
+          whatsapp?: string
+          work_hours_kg?: string
+          work_hours_ru?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
