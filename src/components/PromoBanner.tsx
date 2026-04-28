@@ -1,0 +1,18 @@
+import { Truck, Sparkles } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+
+const PromoBanner = () => {
+  const { t } = useLanguage();
+  return (
+    <div
+      className="text-primary-foreground text-xs sm:text-sm font-medium py-2 px-4 flex items-center justify-center gap-2"
+      style={{ background: 'var(--gradient-promo)' }}
+    >
+      <Truck size={16} className="hidden sm:inline" />
+      <span className="text-center">{t.promo}</span>
+      <Sparkles size={16} className="hidden sm:inline" />
+    </div>
+  );
+};
+
+export default PromoBanner;
