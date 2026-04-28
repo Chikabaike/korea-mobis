@@ -14,15 +14,16 @@ const Header = () => {
   return (
     <header className="bg-card border-b border-border shrink-0">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-4">
+        <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
           {/* Logo */}
-          <div className="flex items-center gap-2 shrink-0">
-            <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center">
-              <Wrench size={18} className="text-secondary-foreground" />
+          <div className="flex items-center gap-2 shrink-0 min-w-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-secondary flex items-center justify-center shrink-0">
+              <Wrench size={16} className="text-secondary-foreground sm:hidden" />
+              <Wrench size={18} className="text-secondary-foreground hidden sm:block" />
             </div>
             <div>
-              <div className="text-lg font-black tracking-tight text-foreground leading-none">MOBIS</div>
-              <div className="text-[9px] uppercase tracking-widest text-muted-foreground">Auto Parts</div>
+              <div className="text-base sm:text-lg font-black tracking-tight text-foreground leading-none">MOBIS</div>
+              <div className="text-[8px] sm:text-[9px] uppercase tracking-widest text-muted-foreground">Auto Parts</div>
             </div>
           </div>
 
@@ -38,7 +39,7 @@ const Header = () => {
           </div>
 
           {/* Right meta */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             <a
               href={`tel:${settings.phone}`}
               className="hidden lg:flex items-center gap-2 text-sm font-semibold text-foreground hover:text-primary transition-colors"
@@ -46,9 +47,16 @@ const Header = () => {
               <Phone size={16} />
               <span>{settings.phone}</span>
             </a>
+            <a
+              href={`tel:${settings.phone}`}
+              className="lg:hidden w-9 h-9 rounded-md flex items-center justify-center text-foreground hover:bg-muted"
+              aria-label="Call"
+            >
+              <Phone size={16} />
+            </a>
             <button
               onClick={() => setLanguage(language === 'ru' ? 'kg' : 'ru')}
-              className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors px-2.5 py-1.5 rounded-md hover:bg-muted"
+              className="flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5 rounded-md hover:bg-muted"
             >
               <Languages size={14} />
               {language.toUpperCase()}
@@ -74,7 +82,7 @@ const Header = () => {
         </div>
 
         {/* Info bar */}
-        <div className="hidden md:flex items-center gap-6 text-xs text-muted-foreground py-2 border-t border-border">
+        <div className="hidden md:flex flex-wrap items-center gap-x-6 gap-y-1 text-xs text-muted-foreground py-2 border-t border-border">
           <div className="flex items-center gap-1.5">
             <MapPin size={13} className="text-primary" />
             {address}
@@ -83,7 +91,7 @@ const Header = () => {
             <Clock size={13} className="text-primary" />
             {workHours}
           </div>
-          <div className="ml-auto text-[10px] uppercase tracking-widest font-bold text-accent">
+          <div className="md:ml-auto text-[10px] uppercase tracking-widest font-bold text-accent">
             {t.inStock}: 12 000+ позиций
           </div>
         </div>

@@ -26,8 +26,8 @@ const ProductCard = ({ part, onClick }: { part: CarPart; onClick: () => void }) 
           {part.category}
         </div>
       </div>
-      <div className="p-4 space-y-3">
-        <h3 className="font-semibold text-foreground text-sm leading-tight line-clamp-2 min-h-[2.5rem]">{part.name}</h3>
+      <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
+        <h3 className="font-semibold text-foreground text-xs sm:text-sm leading-tight line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem]">{part.name}</h3>
         <div className="flex flex-wrap gap-1">
           {part.compatibility.map((f) => (
             <span key={f} className={`text-[9px] font-bold px-2 py-0.5 rounded ${fuelColor[f]}`}>
@@ -35,11 +35,11 @@ const ProductCard = ({ part, onClick }: { part: CarPart; onClick: () => void }) 
             </span>
           ))}
         </div>
-        <div className="flex items-center justify-between pt-2 border-t border-border">
+        <div className="flex items-center justify-between gap-2 pt-2 border-t border-border">
           <div>
-            <div className="text-lg font-black text-foreground leading-none">
+            <div className="text-base sm:text-lg font-black text-foreground leading-none">
               {part.price.toLocaleString('ru-RU')}
-              <span className="text-xs text-muted-foreground font-medium ml-1">сом</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground font-medium ml-1">сом</span>
             </div>
           </div>
           <button
@@ -47,7 +47,7 @@ const ProductCard = ({ part, onClick }: { part: CarPart; onClick: () => void }) 
               e.stopPropagation();
               onClick();
             }}
-            className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 active:scale-95 transition-all"
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
             aria-label="Подробнее"
           >
             <ShoppingCart size={15} />
