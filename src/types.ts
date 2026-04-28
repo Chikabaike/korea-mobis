@@ -1,5 +1,11 @@
 export type FuelType = 'Бензин' | 'Дизель' | 'LPG/LPI' | 'Hybrid';
 
+export interface CarCompatibility {
+  brand: string;
+  model: string;
+  generation?: string; // если не указано — совместимо со всеми поколениями модели
+}
+
 export interface CarPart {
   id: string;
   name: string;
@@ -7,6 +13,7 @@ export interface CarPart {
   price: number;
   image: string;
   compatibility: FuelType[];
+  cars?: CarCompatibility[];
 }
 
 export interface GenerationData {
