@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Lock, LogOut, Plus, Trash2, Save, RotateCcw, ArrowLeft, Pencil, X } from 'lucide-react';
 import { StoreProvider, useStore, ADMIN_PASSWORD, ADMIN_PASSWORD_KEY } from '@/context/StoreContext';
-import type { BrandData, CarPart, FuelType, GenerationData, ModelData } from '@/types';
+import type { BrandData, CarCompatibility, CarPart, FuelType, GenerationData, ModelData } from '@/types';
 
 const FUELS: FuelType[] = ['Бензин', 'Дизель', 'LPG/LPI', 'Hybrid'];
 
@@ -123,9 +123,18 @@ const PartEditor = ({ part, categories, onSave, onCancel }: {
   onSave: (p: CarPart) => void;
   onCancel: () => void;
 }) => {
-  const [draft, setDraft] = useState<CarPart>(part);
+  const { brands } = useStore();
+  const [draft, setDraft] = useState<CarPart>({ ...part, cars: part.cars ?? [] });
   const toggleFuel = (f: FuelType) => {
     setDraft({ ...draft, compatibility: draft.compatibility.includes(f) ? draft.compatibility.filter((x) => x !== f) : [...draft.compatibility, f] });
+  };
+
+  const cars = draft.cars ?? [];
+  const removeCar = (idx: number) => setDraft({ ...draft, cars: cars.filter((_, i) => i !== idx) });
+  const addCar = (c: CarCompatibility) => {
+    const dup = cars.some((x) => x.brand === c.brand && x.model === c.model && (x.generation ?? '') === (c.generation ?? ''));
+    if (dup) return;
+    setDraft({ ...draft, cars: [...cars, c] });
   };
 
   return (
@@ -158,10 +167,62 @@ const PartEditor = ({ part, categories, onSave, onCancel }: {
             ))}
           </div>
         </Field>
+        <Field label="Совместимые автомобили">
+          <CarPicker brands={brands} onAdd={addCar} />
+          <div className="mt-2 space-y-1.5">
+            {cars.length === 0 && (
+              <p className="text-xs text-muted-foreground">Не выбрано — запчасть будет считаться универсальной по авто.</p>
+            )}
+            {cars.map((c, i) => (
+              <div key={i} className="flex items-center justify-between bg-muted rounded-lg px-3 py-2 text-xs">
+                <span className="font-medium">
+                  {c.brand} · {c.model}
+                  {c.generation ? <span className="text-muted-foreground"> · {c.generation}</span> : <span className="text-muted-foreground"> · все поколения</span>}
+                </span>
+                <button type="button" onClick={() => removeCar(i)} className="text-destructive p-1"><X size={12} /></button>
+              </div>
+            ))}
+          </div>
+        </Field>
         <button onClick={() => onSave(draft)} className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground font-bold py-3 rounded-lg">
           <Save size={14} /> Сохранить
         </button>
       </div>
+    </div>
+  );
+};
+
+const CarPicker = ({ brands, onAdd }: { brands: BrandData[]; onAdd: (c: CarCompatibility) => void }) => {
+  const [brand, setBrand] = useState('');
+  const [model, setModel] = useState('');
+  const [generation, setGeneration] = useState('');
+
+  const brandObj = brands.find((b) => b.name === brand);
+  const modelObj = brandObj?.models.find((m) => m.name === model);
+
+  const add = () => {
+    if (!brand || !model) return;
+    onAdd({ brand, model, generation: generation || undefined });
+    setGeneration('');
+  };
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_1fr_auto] gap-2">
+      <select value={brand} onChange={(e) => { setBrand(e.target.value); setModel(''); setGeneration(''); }} className="input text-xs">
+        <option value="">Марка</option>
+        {brands.map((b) => <option key={b.name} value={b.name}>{b.name}</option>)}
+      </select>
+      <select value={model} onChange={(e) => { setModel(e.target.value); setGeneration(''); }} disabled={!brandObj} className="input text-xs disabled:opacity-50">
+        <option value="">Модель</option>
+        {brandObj?.models.map((m) => <option key={m.name} value={m.name}>{m.name}</option>)}
+      </select>
+      <select value={generation} onChange={(e) => setGeneration(e.target.value)} disabled={!modelObj} className="input text-xs disabled:opacity-50">
+        <option value="">Все поколения</option>
+        {modelObj?.generations.map((g) => <option key={g.generationName} value={g.generationName}>{g.generationName}</option>)}
+      </select>
+      <button type="button" onClick={add} disabled={!brand || !model} className="bg-primary text-primary-foreground rounded-lg px-3 text-xs font-bold disabled:opacity-50 flex items-center justify-center gap-1">
+        <Plus size={12} /> Добавить
+      </button>
     </div>
   );
 };
