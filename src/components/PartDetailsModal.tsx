@@ -1,10 +1,12 @@
 import { X, MessageCircle, ShieldCheck, Truck } from 'lucide-react';
 import type { CarPart } from '../types';
 import { useLanguage } from '../context/LanguageContext';
+import { useStore } from '../context/StoreContext';
 import { useEffect } from 'react';
 
 const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => void }) => {
   const { t } = useLanguage();
+  const { settings } = useStore();
 
   useEffect(() => {
     const onEsc = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -68,7 +70,7 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
               </div>
             </div>
             <a
-              href={`https://wa.me/996700123456?text=${encodeURIComponent(`Здравствуйте! Интересует: ${part.name} (AP-${part.id})`)}`}
+              href={`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(`Здравствуйте! Интересует: ${part.name} (AP-${part.id})`)}`}
               target="_blank"
               rel="noreferrer"
               className="flex-1 max-w-xs flex items-center justify-center gap-2 bg-[#25D366] text-white py-3.5 px-5 rounded-xl font-bold text-sm hover:opacity-90 active:scale-95 transition-all"

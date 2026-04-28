@@ -1,10 +1,15 @@
 import { Search, MapPin, Clock, Phone, Languages, Wrench } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useStore } from '../context/StoreContext';
 
 const Header = () => {
   const { filters, setSearchQuery } = useFilter();
   const { language, setLanguage, t } = useLanguage();
+  const { settings } = useStore();
+  const address = language === 'ru' ? settings.addressRu : settings.addressKg;
+  const workHours = language === 'ru' ? settings.workHoursRu : settings.workHoursKg;
 
   return (
     <header className="bg-card border-b border-border shrink-0">
@@ -35,11 +40,11 @@ const Header = () => {
           {/* Right meta */}
           <div className="flex items-center gap-3">
             <a
-              href="tel:+996700123456"
+              href={`tel:${settings.phone}`}
               className="hidden lg:flex items-center gap-2 text-sm font-semibold text-foreground hover:text-primary transition-colors"
             >
               <Phone size={16} />
-              <span>+996 700 123 456</span>
+              <span>{settings.phone}</span>
             </a>
             <button
               onClick={() => setLanguage(language === 'ru' ? 'kg' : 'ru')}
@@ -48,6 +53,12 @@ const Header = () => {
               <Languages size={14} />
               {language.toUpperCase()}
             </button>
+            <Link
+              to="/admin"
+              className="hidden sm:inline-flex text-[10px] font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground px-2.5 py-1.5 rounded-md hover:bg-muted"
+            >
+              Admin
+            </Link>
           </div>
         </div>
 
@@ -66,11 +77,11 @@ const Header = () => {
         <div className="hidden md:flex items-center gap-6 text-xs text-muted-foreground py-2 border-t border-border">
           <div className="flex items-center gap-1.5">
             <MapPin size={13} className="text-primary" />
-            {t.address}
+            {address}
           </div>
           <div className="flex items-center gap-1.5">
             <Clock size={13} className="text-primary" />
-            {t.workHours}
+            {workHours}
           </div>
           <div className="ml-auto text-[10px] uppercase tracking-widest font-bold text-accent">
             {t.inStock}: 12 000+ позиций

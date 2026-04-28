@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import { PARTS } from '../data/mockData';
 import { useFilter } from '../context/FilterContext';
+import { useStore } from '../context/StoreContext';
 import { useLanguage } from '../context/LanguageContext';
 import ProductCard from './ProductCard';
 import PartDetailsModal from './PartDetailsModal';
@@ -12,8 +12,10 @@ const Catalog = () => {
   const { t } = useLanguage();
   const [selected, setSelected] = useState<CarPart | null>(null);
 
+  const { parts } = useStore();
+
   const filtered = useMemo(() => {
-    return PARTS.filter((p) => {
+    return parts.filter((p) => {
       if (filters.fuel && !p.compatibility.includes(filters.fuel)) return false;
       if (filters.searchQuery) {
         const q = filters.searchQuery.toLowerCase();
@@ -21,7 +23,7 @@ const Catalog = () => {
       }
       return true;
     });
-  }, [filters]);
+  }, [filters, parts]);
 
   const title = filters.brand || filters.fuel || filters.searchQuery ? t.allParts : t.lastParts;
 
