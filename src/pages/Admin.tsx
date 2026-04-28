@@ -71,7 +71,7 @@ const emptyPart = (categories: string[]): CarPart => ({
 });
 
 const PartsTab = () => {
-  const { parts, setParts, categories, brands } = useStore();
+  const { parts, setParts, categories } = useStore();
   const [editing, setEditing] = useState<CarPart | null>(null);
 
   const save = (p: CarPart) => {
