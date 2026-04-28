@@ -1,7 +1,7 @@
 import { ChevronDown, RotateCcw, Fuel } from 'lucide-react';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
-import { BRANDS } from '../data/mockData';
+import { useStore } from '../context/StoreContext';
 import type { FuelType } from '../types';
 
 const FUEL_OPTIONS: FuelType[] = ['Бензин', 'Дизель', 'LPG/LPI', 'Hybrid'];
@@ -40,6 +40,7 @@ const Select = ({
 const FilterWidget = ({ onSelection }: { onSelection?: () => void } = {}) => {
   const { filters, setBrand, setModel, setGeneration, setFuel, reset } = useFilter();
   const { t } = useLanguage();
+  const { brands: BRANDS } = useStore();
 
   const brand = BRANDS.find((b) => b.name === filters.brand);
   const model = brand?.models.find((m) => m.name === filters.model);
