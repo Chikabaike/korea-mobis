@@ -155,8 +155,37 @@ const PartEditor = ({ part, categories, onSave, onCancel }: {
         <Field label="Цена (сом)">
           <input type="number" value={draft.price} onChange={(e) => setDraft({ ...draft, price: Number(e.target.value) })} className="input" />
         </Field>
-        <Field label="URL изображения">
-          <input value={draft.image} onChange={(e) => setDraft({ ...draft, image: e.target.value })} className="input" />
+        <Field label="Фото запчасти">
+          <div className="flex items-center gap-3">
+            <div className="w-20 h-20 rounded-lg bg-muted border border-border overflow-hidden flex items-center justify-center shrink-0">
+              {draft.image ? (
+                <img src={draft.image} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-[10px] text-muted-foreground">нет фото</span>
+              )}
+            </div>
+            <div className="flex-1 space-y-2">
+              <label className="block">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = () => setDraft({ ...draft, image: String(reader.result) });
+                    reader.readAsDataURL(file);
+                  }}
+                  className="block w-full text-xs file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-primary file:text-primary-foreground file:font-bold file:cursor-pointer cursor-pointer"
+                />
+              </label>
+              {draft.image && (
+                <button type="button" onClick={() => setDraft({ ...draft, image: '' })} className="text-xs text-destructive hover:opacity-70">
+                  Удалить фото
+                </button>
+              )}
+            </div>
+          </div>
         </Field>
         <Field label="Совместимость с топливом">
           <div className="grid grid-cols-2 gap-2">
