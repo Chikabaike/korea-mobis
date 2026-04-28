@@ -17,6 +17,16 @@ const Catalog = () => {
   const filtered = useMemo(() => {
     return parts.filter((p) => {
       if (filters.fuel && !p.compatibility.includes(filters.fuel)) return false;
+      // Фильтр по авто: если у запчасти не указаны cars — считаем универсальной.
+      if (filters.brand && p.cars && p.cars.length > 0) {
+        const matches = p.cars.some((c) => {
+          if (c.brand !== filters.brand) return false;
+          if (filters.model && c.model !== filters.model) return false;
+          if (filters.generation && c.generation && c.generation !== filters.generation) return false;
+          return true;
+        });
+        if (!matches) return false;
+      }
       if (filters.searchQuery) {
         const q = filters.searchQuery.toLowerCase();
         if (!p.name.toLowerCase().includes(q) && !p.category.toLowerCase().includes(q)) return false;
