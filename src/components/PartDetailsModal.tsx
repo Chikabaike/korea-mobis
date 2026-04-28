@@ -18,10 +18,10 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
     <div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-foreground/40 backdrop-blur-sm" onClick={onClose}>
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-card w-full max-w-2xl rounded-t-3xl sm:rounded-3xl overflow-hidden animate-in fade-in slide-in-from-bottom-4"
+        className="bg-card w-full max-w-2xl rounded-t-3xl sm:rounded-3xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 max-h-[90vh] flex flex-col"
       >
-        <div className="relative">
-          <img src={part.image} alt={part.name} className="w-full h-64 sm:h-80 object-cover" />
+        <div className="relative shrink-0">
+          <img src={part.image} alt={part.name} className="w-full h-48 sm:h-72 lg:h-80 object-cover" />
           <button
             onClick={onClose}
             className="absolute top-4 right-4 w-10 h-10 rounded-full bg-card/95 backdrop-blur flex items-center justify-center hover:bg-card transition-colors"
@@ -32,12 +32,12 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
             {part.category}
           </div>
         </div>
-        <div className="p-6 space-y-5">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto">
           <div>
             <div className="text-xs uppercase tracking-widest text-muted-foreground font-bold mb-1">
               {t.art}: AP-{part.id.padStart(5, '0')}
             </div>
-            <h2 className="text-2xl font-black text-foreground leading-tight">{part.name}</h2>
+            <h2 className="text-xl sm:text-2xl font-black text-foreground leading-tight">{part.name}</h2>
           </div>
 
           <div>
@@ -62,18 +62,18 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
             <div>
-              <div className="text-3xl font-black text-foreground leading-none">
+              <div className="text-2xl sm:text-3xl font-black text-foreground leading-none">
                 {part.price.toLocaleString('ru-RU')}
-                <span className="text-base text-muted-foreground font-medium ml-1">сом</span>
+                <span className="text-sm sm:text-base text-muted-foreground font-medium ml-1">сом</span>
               </div>
             </div>
             <a
               href={`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(`Здравствуйте! Интересует: ${part.name} (AP-${part.id})`)}`}
               target="_blank"
               rel="noreferrer"
-              className="flex-1 max-w-xs flex items-center justify-center gap-2 bg-[#25D366] text-white py-3.5 px-5 rounded-xl font-bold text-sm hover:opacity-90 active:scale-95 transition-all"
+              className="w-full sm:w-auto sm:flex-1 sm:max-w-xs flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 sm:py-3.5 px-5 rounded-xl font-bold text-sm hover:opacity-90 active:scale-95 transition-all"
             >
               <MessageCircle size={16} />
               {t.contactWhatsapp}

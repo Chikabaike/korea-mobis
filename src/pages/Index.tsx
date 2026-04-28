@@ -18,7 +18,7 @@ const AppContent = () => {
       <Header />
 
       <main className="flex-1 flex relative">
-        <aside className="w-72 bg-card border-r border-border p-6 shrink-0 hidden lg:block sticky top-0 h-screen overflow-y-auto">
+        <aside className="w-64 xl:w-72 bg-card border-r border-border p-5 xl:p-6 shrink-0 hidden lg:block sticky top-0 h-screen overflow-y-auto">
           <FilterWidget />
         </aside>
 
@@ -53,13 +53,13 @@ const AppContent = () => {
         )}
 
         <section className="flex-1 min-w-0">
-          <div className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
+          <div className="mx-auto max-w-7xl p-3 sm:p-6 lg:p-8">
             <Catalog />
           </div>
         </section>
       </main>
 
-      <footer className="bg-card border-t border-border py-6 text-center text-[10px] uppercase tracking-widest text-muted-foreground font-medium">
+      <footer className="bg-card border-t border-border py-5 sm:py-6 px-4 text-center text-[9px] sm:text-[10px] uppercase tracking-widest text-muted-foreground font-medium">
         © 2026 MOBIS — Intellectual Parts System · Bishkek
       </footer>
     </div>
