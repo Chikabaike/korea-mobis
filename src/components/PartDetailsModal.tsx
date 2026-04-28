@@ -1,0 +1,86 @@
+import { X, MessageCircle, ShieldCheck, Truck } from 'lucide-react';
+import type { CarPart } from '../types';
+import { useLanguage } from '../context/LanguageContext';
+import { useEffect } from 'react';
+
+const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => void }) => {
+  const { t } = useLanguage();
+
+  useEffect(() => {
+    const onEsc = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    document.addEventListener('keydown', onEsc);
+    return () => document.removeEventListener('keydown', onEsc);
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-foreground/40 backdrop-blur-sm" onClick={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-card w-full max-w-2xl rounded-t-3xl sm:rounded-3xl overflow-hidden animate-in fade-in slide-in-from-bottom-4"
+      >
+        <div className="relative">
+          <img src={part.image} alt={part.name} className="w-full h-64 sm:h-80 object-cover" />
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-card/95 backdrop-blur flex items-center justify-center hover:bg-card transition-colors"
+          >
+            <X size={18} />
+          </button>
+          <div className="absolute bottom-4 left-4 text-[10px] font-bold uppercase tracking-widest bg-card/95 backdrop-blur px-3 py-1.5 rounded-full text-foreground">
+            {part.category}
+          </div>
+        </div>
+        <div className="p-6 space-y-5">
+          <div>
+            <div className="text-xs uppercase tracking-widest text-muted-foreground font-bold mb-1">
+              {t.art}: AP-{part.id.padStart(5, '0')}
+            </div>
+            <h2 className="text-2xl font-black text-foreground leading-tight">{part.name}</h2>
+          </div>
+
+          <div>
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-2">{t.compatibility}</div>
+            <div className="flex flex-wrap gap-1.5">
+              {part.compatibility.map((f) => (
+                <span key={f} className="text-xs font-semibold bg-muted text-foreground px-3 py-1 rounded-full">
+                  {f}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 py-3 border-y border-border">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <ShieldCheck size={16} className="text-primary" />
+              Гарантия 12 мес
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Truck size={16} className="text-primary" />
+              Доставка по КР
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <div className="text-3xl font-black text-foreground leading-none">
+                {part.price.toLocaleString('ru-RU')}
+                <span className="text-base text-muted-foreground font-medium ml-1">сом</span>
+              </div>
+            </div>
+            <a
+              href={`https://wa.me/996700123456?text=${encodeURIComponent(`Здравствуйте! Интересует: ${part.name} (AP-${part.id})`)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="flex-1 max-w-xs flex items-center justify-center gap-2 bg-[#25D366] text-white py-3.5 px-5 rounded-xl font-bold text-sm hover:opacity-90 active:scale-95 transition-all"
+            >
+              <MessageCircle size={16} />
+              {t.contactWhatsapp}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PartDetailsModal;
