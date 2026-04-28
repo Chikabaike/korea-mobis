@@ -50,7 +50,7 @@ const translations = {
   },
 } as const;
 
-type T = typeof translations.ru;
+type T = { [K in keyof typeof translations.ru]: string };
 
 interface Ctx {
   language: Language;
