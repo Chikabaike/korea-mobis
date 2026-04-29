@@ -31,7 +31,7 @@ const Header = () => {
                   <MapPin size={13} className="text-primary shrink-0" />
                   <span className="truncate">г.Бишкек, рынок Кудайберген Ряд 18, 33-34 контейнер</span>
                 </a>
-                <div className="flex items-center gap-1.5 shrink-0">
+                <div className="flex items-center gap-2 shrink-0 ml-1">
                   <a
                     href="https://wa.me/996500160399"
                     target="_blank"
@@ -47,7 +47,7 @@ const Header = () => {
                     aria-label="WhatsApp"
                     className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <img src={whatsappIcon} alt="WhatsApp" className="w-5 h-5 object-contain rounded-sm" />
+                    <img src={whatsappIcon} alt="WhatsApp" className="w-5 h-5 object-contain" />
                   </a>
                   <a
                     href="https://www.instagram.com/koreamobis_4444/"
@@ -56,7 +56,7 @@ const Header = () => {
                     aria-label="Instagram"
                     className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <img src={instagramIcon} alt="Instagram" className="w-5 h-5 object-contain rounded-sm scale-150" />
+                    <img src={instagramIcon} alt="Instagram" className="w-5 h-5 object-contain" />
                   </a>
                 </div>
               </div>
@@ -70,7 +70,7 @@ const Header = () => {
                   <MapPin size={13} className="text-primary shrink-0" />
                   <span className="truncate">г.Бишкек, с. Новопавловка ул. Фрунзе 355</span>
                 </a>
-                <div className="flex items-center gap-1.5 shrink-0">
+                <div className="flex items-center gap-2 shrink-0 ml-1">
                   <a
                     href="https://wa.me/996508304444"
                     target="_blank"
@@ -86,7 +86,7 @@ const Header = () => {
                     aria-label="WhatsApp"
                     className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <img src={whatsappIcon} alt="WhatsApp" className="w-5 h-5 object-contain rounded-sm" />
+                    <img src={whatsappIcon} alt="WhatsApp" className="w-5 h-5 object-contain" />
                   </a>
                   <a
                     href="https://www.instagram.com/koreamobis_4444/"
@@ -95,7 +95,7 @@ const Header = () => {
                     aria-label="Instagram"
                     className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <img src={instagramIcon} alt="Instagram" className="w-5 h-5 object-contain rounded-sm scale-150" />
+                    <img src={instagramIcon} alt="Instagram" className="w-5 h-5 object-contain" />
                   </a>
                 </div>
               </div>
