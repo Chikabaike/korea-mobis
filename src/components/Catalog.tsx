@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useFilter } from '../context/FilterContext';
 import { useStore } from '../context/StoreContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -6,6 +6,7 @@ import ProductCard from './ProductCard';
 import PartDetailsModal from './PartDetailsModal';
 import type { CarPart } from '../types';
 import { PackageSearch } from 'lucide-react';
+import heroKoreaMobis from '@/assets/hero-korea-mobis.jpg';
 
 const Catalog = () => {
   const { filters } = useFilter();
