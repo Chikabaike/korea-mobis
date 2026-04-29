@@ -49,6 +49,15 @@ const Header = () => {
                   >
                     <img src={whatsappIcon} alt="WhatsApp" className="w-4 h-4 object-contain" />
                   </a>
+                  <a
+                    href="https://www.instagram.com/koreamobis_4444/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram"
+                    className="shrink-0 hover:opacity-80 transition-opacity"
+                  >
+                    <img src={instagramIcon} alt="Instagram" className="w-4 h-4 object-contain" />
+                  </a>
                 </div>
               </div>
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-wrap">
