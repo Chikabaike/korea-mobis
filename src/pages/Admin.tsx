@@ -313,7 +313,7 @@ const Field = ({ label, children }: { label: string; children: React.ReactNode }
 /* ============================ CATEGORIES ============================ */
 
 const CategoriesTab = () => {
-  const { categories, setCategoriesList, parts } = useStore();
+  const { categories, setCategoriesList, renameCategory, parts } = useStore();
   const [name, setName] = useState('');
 
   const add = async () => {
@@ -330,6 +330,13 @@ const CategoriesTab = () => {
     catch (e) { toast.error(e instanceof Error ? e.message : 'Ошибка'); }
   };
 
+  const rename = async (c: string) => {
+    const v = prompt('Новое название категории:', c);
+    if (v === null) return;
+    try { await renameCategory(c, v); toast.success('Переименовано'); }
+    catch (e) { toast.error(e instanceof Error ? e.message : 'Ошибка'); }
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-black">Категории ({categories.length})</h2>
@@ -341,7 +348,10 @@ const CategoriesTab = () => {
         {categories.map((c) => (
           <div key={c} className="flex items-center justify-between bg-card border border-border rounded-lg px-4 py-3">
             <span className="font-medium text-sm">{c}</span>
-            <button onClick={() => remove(c)} className="text-destructive p-1 hover:opacity-70"><Trash2 size={14} /></button>
+            <div className="flex items-center gap-1">
+              <button onClick={() => rename(c)} title="Переименовать" className="text-muted-foreground hover:text-foreground p-1"><Settings size={14} /></button>
+              <button onClick={() => remove(c)} className="text-destructive p-1 hover:opacity-70"><Trash2 size={14} /></button>
+            </div>
           </div>
         ))}
       </div>
