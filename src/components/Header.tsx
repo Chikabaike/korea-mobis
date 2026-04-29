@@ -13,6 +13,30 @@ const Header = () => {
 
   return (
     <header className="bg-card border-b border-border shrink-0">
+      {/* Top bar */}
+      <div className="border-b border-border">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3 sm:gap-6 h-9 text-xs sm:text-sm overflow-x-auto whitespace-nowrap">
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <MapPin size={13} className="text-primary shrink-0" />
+              <span>г.Бишкек</span>
+            </div>
+            <a
+              href="tel:+996508304444"
+              className="font-semibold text-foreground hover:text-primary transition-colors"
+            >
+              +996 508 304 444
+            </a>
+            <a
+              href="#map"
+              className="text-primary hover:underline font-medium"
+            >
+              Магазины на карте
+            </a>
+          </div>
+        </div>
+      </div>
+
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
           {/* Logo */}
