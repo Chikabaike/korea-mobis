@@ -79,11 +79,12 @@ const FilterWidget = ({
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-1.5 mr-1">
+        <div className="flex flex-col gap-2">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-1.5">
             <Fuel size={12} />
             {t.engineType}
           </span>
+          <div className="flex flex-wrap items-center gap-2">
           {FUEL_OPTIONS.map((f) => {
             const enabled = availableFuels.includes(f);
             const active = filters.fuel === f;
@@ -108,6 +109,7 @@ const FilterWidget = ({
               </button>
             );
           })}
+          </div>
         </div>
 
         <button
