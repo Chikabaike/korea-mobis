@@ -1,9 +1,10 @@
-import { Search, MapPin, Clock, Phone, Languages, Wrench, Settings, MessageCircle } from 'lucide-react';
+import { Search, MapPin, Clock, Phone, Languages, Wrench, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
 import hyundaiKiaLogo from '@/assets/hyundai-kia-logo.png';
+import whatsappIcon from '@/assets/whatsapp.png';
 
 const Header = () => {
   const { filters, setSearchQuery } = useFilter();
@@ -43,9 +44,9 @@ const Header = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="WhatsApp"
-                    className="text-green-600 hover:text-green-500 transition-colors"
+                    className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <MessageCircle size={14} fill="currentColor" />
+                    <img src={whatsappIcon} alt="WhatsApp" className="w-4 h-4 object-contain" />
                   </a>
                 </div>
               </div>
@@ -73,9 +74,9 @@ const Header = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="WhatsApp"
-                    className="text-green-600 hover:text-green-500 transition-colors"
+                    className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <MessageCircle size={14} fill="currentColor" />
+                    <img src={whatsappIcon} alt="WhatsApp" className="w-4 h-4 object-contain" />
                   </a>
                 </div>
               </div>
