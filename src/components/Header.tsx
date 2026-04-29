@@ -50,9 +50,7 @@ const Header = () => {
                 </a>
                 <div className="flex items-center gap-2 shrink-0 ml-1">
                   <a
-                    href="https://wa.me/996500160399"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="tel:+996500160399"
                     className="font-semibold text-foreground hover:text-primary transition-colors"
                   >
                     +996 500 160 399
@@ -89,9 +87,7 @@ const Header = () => {
                 </a>
                 <div className="flex items-center gap-2 shrink-0 ml-1">
                   <a
-                    href="https://wa.me/996508304444"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="tel:+996508304444"
                     className="font-semibold text-foreground hover:text-primary transition-colors"
                   >
                     +996 508 304 444
