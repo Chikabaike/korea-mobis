@@ -5,6 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
 import hyundaiKiaLogo from '@/assets/hyundai-kia-logo.png';
 import whatsappIcon from '@/assets/whatsapp.png';
+import instagramIcon from '@/assets/instagram.png';
 
 const Header = () => {
   const { filters, setSearchQuery } = useFilter();
