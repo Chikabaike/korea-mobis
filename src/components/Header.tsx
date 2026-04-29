@@ -9,10 +9,10 @@ import instagramIcon from '@/assets/instagram.png';
 
 const Header = () => {
   const { filters, setSearchQuery } = useFilter();
-  const { language, setLanguage, t } = useLanguage();
+  const { t } = useLanguage();
   const { settings } = useStore();
-  const address = language === 'ru' ? settings.addressRu : settings.addressKg;
-  const workHours = language === 'ru' ? settings.workHoursRu : settings.workHoursKg;
+  const address = settings.addressRu;
+  const workHours = settings.workHoursRu;
 
   return (
     <header className="bg-card border-b border-border shrink-0">
