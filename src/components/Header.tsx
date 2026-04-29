@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
+import hyundaiKiaLogo from '@/assets/hyundai-kia-logo.png';
 
 const Header = () => {
   const { filters, setSearchQuery } = useFilter();
@@ -40,18 +41,17 @@ const Header = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
           {/* Logo */}
-          <div className="flex items-center gap-2 shrink-0 min-w-0">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-secondary flex items-center justify-center shrink-0">
-              <Wrench size={16} className="text-secondary-foreground sm:hidden" />
-              <Wrench size={18} className="text-secondary-foreground hidden sm:block" />
-            </div>
-            <div>
-              <div className="text-base sm:text-lg font-black tracking-tight text-foreground leading-none">
-                <span className="text-red-600">КОРЕЯ</span>
-                <span>-M</span>
-                <span className="text-red-600">O</span>
-                <span>BIS</span>
-              </div>
+          <div className="flex flex-col items-center gap-1 shrink-0 min-w-0">
+            <img
+              src={hyundaiKiaLogo}
+              alt="Hyundai Kia"
+              className="h-6 sm:h-8 w-auto object-contain"
+            />
+            <div className="text-base sm:text-lg font-black tracking-tight text-foreground leading-none">
+              <span className="text-red-600">КОРЕЯ</span>
+              <span>-M</span>
+              <span className="text-red-600">O</span>
+              <span>BIS</span>
             </div>
           </div>
 
