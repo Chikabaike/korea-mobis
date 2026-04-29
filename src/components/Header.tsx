@@ -46,8 +46,12 @@ const Header = () => {
               <Wrench size={18} className="text-secondary-foreground hidden sm:block" />
             </div>
             <div>
-              <div className="text-base sm:text-lg font-black tracking-tight text-foreground leading-none">MOBIS</div>
-              <div className="text-[8px] sm:text-[9px] uppercase tracking-widest text-muted-foreground">Auto Parts</div>
+              <div className="text-base sm:text-lg font-black tracking-tight text-foreground leading-none">
+                <span className="text-red-600">КОРЕЯ</span>
+                <span>-MB</span>
+                <span className="text-red-600">O</span>
+                <span>IS</span>
+              </div>
             </div>
           </div>
 
