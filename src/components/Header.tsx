@@ -1,5 +1,6 @@
-import { Search, MapPin, Clock, Phone, Wrench, Settings } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Search, MapPin, Clock, Phone, Wrench } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useRef } from 'react';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
@@ -13,6 +14,22 @@ const Header = () => {
   const { settings } = useStore();
   const address = settings.addressRu;
   const workHours = settings.workHoursRu;
+  const navigate = useNavigate();
+  const clickCountRef = useRef(0);
+  const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleLogoClick = () => {
+    clickCountRef.current += 1;
+    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+    clickTimerRef.current = setTimeout(() => {
+      clickCountRef.current = 0;
+    }, 1500);
+    if (clickCountRef.current >= 5) {
+      clickCountRef.current = 0;
+      if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+      navigate('/admin');
+    }
+  };
 
   return (
     <header className="bg-card border-b border-border shrink-0">
@@ -107,11 +124,17 @@ const Header = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
           {/* Logo */}
-          <div className="flex flex-col items-center gap-1 shrink-0 min-w-0">
+          <button
+            type="button"
+            onClick={handleLogoClick}
+            aria-label="Логотип"
+            className="flex flex-col items-center gap-1 shrink-0 min-w-0 select-none cursor-pointer focus:outline-none"
+          >
             <img
               src={hyundaiKiaLogo}
               alt="Hyundai Kia"
-              className="h-6 sm:h-8 w-auto object-contain"
+              className="h-6 sm:h-8 w-auto object-contain pointer-events-none"
+              draggable={false}
             />
             <div className="text-base sm:text-lg font-black tracking-tight text-foreground leading-none">
               <span className="text-red-600">КОРЕЯ</span>
@@ -119,7 +142,7 @@ const Header = () => {
               <span className="text-red-600">O</span>
               <span>BIS</span>
             </div>
-          </div>
+          </button>
 
           {/* Search */}
           <div className="flex-1 max-w-xl relative hidden md:block">
@@ -140,14 +163,6 @@ const Header = () => {
             >
               <span>{settings.phone}</span>
             </a>
-            <Link
-              to="/admin"
-              aria-label="Админ-панель"
-              title="Админ-панель"
-              className="w-9 h-9 rounded-md flex items-center justify-center text-foreground hover:bg-muted hover:text-primary transition-colors"
-            >
-              <Settings size={18} />
-            </Link>
           </div>
         </div>
 
