@@ -153,6 +153,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     await reload();
   };
 
+  const setBrandsList = async (next: BrandData[]) => {
     const currentNames = new Set(brands.map((b) => b.name));
     const desiredNames = new Set(next.map((b) => b.name));
     const toDelete = [...currentNames].filter((n) => !desiredNames.has(n));
