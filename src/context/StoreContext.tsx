@@ -102,10 +102,10 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
 
   const upsertPart = async (p: CarPart) => {
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(p.id);
-    const payload = {
+    const payload: any = {
       name: p.name, category: p.category, price: p.price, image: p.image,
-      compatibility: p.compatibility as unknown as object[],
-      cars: (p.cars ?? []) as unknown as object[],
+      compatibility: p.compatibility,
+      cars: p.cars ?? [],
     };
     if (isUuid) {
       const { error } = await supabase.from('parts').update(payload).eq('id', p.id);
@@ -153,7 +153,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       await supabase
         .from('brands')
         .upsert(
-          { name: b.name, models: b.models as unknown as object[], position: i + 1 },
+          [{ name: b.name, models: b.models as any, position: i + 1 }],
           { onConflict: 'name' }
         );
     }
