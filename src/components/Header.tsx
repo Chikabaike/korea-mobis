@@ -138,15 +138,7 @@ const Header = () => {
               href={`tel:${settings.phone}`}
               className="hidden lg:flex items-center gap-2 text-sm font-semibold text-foreground hover:text-primary transition-colors"
             >
-              <Phone size={16} />
               <span>{settings.phone}</span>
-            </a>
-            <a
-              href={`tel:${settings.phone}`}
-              className="lg:hidden w-9 h-9 rounded-md flex items-center justify-center text-foreground hover:bg-muted"
-              aria-label="Call"
-            >
-              <Phone size={16} />
             </a>
             <Link
               to="/admin"
