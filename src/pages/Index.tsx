@@ -21,7 +21,6 @@ const AppContent = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <PromoBanner />
       <Header />
 
       <main className="flex-1">
