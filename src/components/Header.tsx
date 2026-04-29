@@ -18,10 +18,24 @@ const Header = () => {
       <div className="border-b border-border">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3 sm:gap-6 h-9 text-xs sm:text-sm overflow-x-auto whitespace-nowrap">
-            <div className="flex items-center gap-1.5 text-muted-foreground">
+            <a
+              href="https://yandex.com/maps/?text=%D0%B3.%D0%91%D0%B8%D1%88%D0%BA%D0%B5%D0%BA%2C%20%D1%80%D1%8B%D0%BD%D0%BE%D0%BA%20%D0%9A%D1%83%D0%B4%D0%B0%D0%B9%D0%B1%D0%B5%D1%80%D0%B3%D0%B5%D0%BD%20%D0%A0%D1%8F%D0%B4%2018%20%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%B9%D0%BD%D0%B5%D1%80%2033-34"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors"
+            >
               <MapPin size={13} className="text-primary shrink-0" />
-              <span>г.Бишкек</span>
-            </div>
+              <span>г.Бишкек, рынок Кудайберген Ряд 18, 33-34 контейнер</span>
+            </a>
+            <a
+              href="https://yandex.com/maps/?text=%D0%B3.%D0%91%D0%B8%D1%88%D0%BA%D0%B5%D0%BA%2C%20%D1%81.%20%D0%9D%D0%BE%D0%B2%D0%BE%D0%BF%D0%B0%D0%B2%D0%BB%D0%BE%D0%B2%D0%BA%D0%B0%2C%20%D1%83%D0%BB.%20%D0%A4%D1%80%D1%83%D0%BD%D0%B7%D0%B5%20355"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors"
+            >
+              <MapPin size={13} className="text-primary shrink-0" />
+              <span>г.Бишкек, с. Новопавловка ул. Фрунзе 355</span>
+            </a>
             <a
               href="tel:+996508304444"
               className="font-semibold text-foreground hover:text-primary transition-colors"
