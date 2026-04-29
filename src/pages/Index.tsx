@@ -1,12 +1,24 @@
+import { useRef, useState } from 'react';
 import Header from '@/components/Header';
 import PromoBanner from '@/components/PromoBanner';
 import FilterWidget from '@/components/FilterWidget';
 import Catalog from '@/components/Catalog';
+import LatestPartsSection from '@/components/LatestPartsSection';
 import { FilterProvider } from '@/context/FilterContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { StoreProvider } from '@/context/StoreContext';
 
 const AppContent = () => {
+  const [showLatest, setShowLatest] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  const handleGo = () => {
+    setShowLatest(true);
+    setTimeout(() => {
+      sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <PromoBanner />
@@ -15,8 +27,15 @@ const AppContent = () => {
       <main className="flex-1">
         <div className="mx-auto max-w-7xl p-3 sm:p-6 lg:p-8 space-y-5">
           <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
-            <FilterWidget orientation="horizontal" />
+            <FilterWidget orientation="horizontal" onGo={handleGo} />
           </div>
+
+          {showLatest && (
+            <div ref={sectionRef}>
+              <LatestPartsSection onClose={() => setShowLatest(false)} />
+            </div>
+          )}
+
           <Catalog />
         </div>
       </main>
