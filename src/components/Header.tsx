@@ -1,9 +1,10 @@
-import { Search, MapPin, Clock, Phone, Languages, Wrench, Settings, MessageCircle } from 'lucide-react';
+import { Search, MapPin, Clock, Phone, Languages, Wrench, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
 import hyundaiKiaLogo from '@/assets/hyundai-kia-logo.png';
+import whatsappIcon from '@/assets/whatsapp.png';
 
 const Header = () => {
   const { filters, setSearchQuery } = useFilter();
