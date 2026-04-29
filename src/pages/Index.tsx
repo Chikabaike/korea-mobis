@@ -12,19 +12,13 @@ const AppContent = () => {
       <PromoBanner />
       <Header />
 
-      <main className="flex-1 flex relative">
-        <aside className="w-64 xl:w-72 bg-card border-r border-border p-5 xl:p-6 shrink-0 hidden lg:block sticky top-0 h-screen overflow-y-auto">
-          <FilterWidget />
-        </aside>
-
-        <section className="flex-1 min-w-0">
-          <div className="mx-auto max-w-7xl p-3 sm:p-6 lg:p-8">
-            <div className="lg:hidden mb-5 bg-card border border-border rounded-xl p-4 sm:p-5">
-              <FilterWidget />
-            </div>
-            <Catalog />
+      <main className="flex-1">
+        <div className="mx-auto max-w-7xl p-3 sm:p-6 lg:p-8 space-y-5">
+          <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
+            <FilterWidget orientation="horizontal" />
           </div>
-        </section>
+          <Catalog />
+        </div>
       </main>
 
       <footer className="bg-card border-t border-border py-5 sm:py-6 px-4 text-center text-[9px] sm:text-[10px] uppercase tracking-widest text-muted-foreground font-medium">

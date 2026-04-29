@@ -19,7 +19,7 @@ const Select = ({
   placeholder: string;
   disabled?: boolean;
 }) => (
-  <div className="relative">
+  <div className="relative w-full">
     <select
       value={value ?? ''}
       onChange={(e) => onChange(e.target.value)}
@@ -37,7 +37,13 @@ const Select = ({
   </div>
 );
 
-const FilterWidget = ({ onSelection }: { onSelection?: () => void } = {}) => {
+const FilterWidget = ({
+  onSelection,
+  orientation = 'vertical',
+}: {
+  onSelection?: () => void;
+  orientation?: 'vertical' | 'horizontal';
+} = {}) => {
   const { filters, setBrand, setModel, setGeneration, setFuel, reset } = useFilter();
   const { t } = useLanguage();
   const { brands: BRANDS } = useStore();
@@ -46,6 +52,74 @@ const FilterWidget = ({ onSelection }: { onSelection?: () => void } = {}) => {
   const model = brand?.models.find((m) => m.name === filters.model);
   const generation = model?.generations.find((g) => g.generationName === filters.generation);
   const availableFuels = generation?.fuels ?? FUEL_OPTIONS;
+
+  if (orientation === 'horizontal') {
+    return (
+      <div className="flex flex-col xl:flex-row xl:items-end gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1 min-w-0">
+          <Select
+            value={filters.brand}
+            onChange={(v) => setBrand(v || null)}
+            options={BRANDS.map((b) => b.name)}
+            placeholder={t.selectBrand}
+          />
+          <Select
+            value={filters.model}
+            onChange={(v) => setModel(v || null)}
+            options={brand?.models.map((m) => m.name) ?? []}
+            placeholder={t.selectModel}
+            disabled={!brand}
+          />
+          <Select
+            value={filters.generation}
+            onChange={(v) => setGeneration(v || null)}
+            options={model?.generations.map((g) => g.generationName) ?? []}
+            placeholder={t.selectGeneration}
+            disabled={!model}
+          />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-1.5 mr-1">
+            <Fuel size={12} />
+            {t.engineType}
+          </span>
+          {FUEL_OPTIONS.map((f) => {
+            const enabled = availableFuels.includes(f);
+            const active = filters.fuel === f;
+            return (
+              <button
+                key={f}
+                disabled={!enabled}
+                onClick={() => {
+                  setFuel(active ? null : f);
+                  onSelection?.();
+                }}
+                className={[
+                  'text-xs font-bold px-3 py-2 rounded-lg border transition-all',
+                  active
+                    ? 'bg-primary text-primary-foreground border-primary shadow-md'
+                    : enabled
+                    ? 'bg-card border-border text-foreground hover:border-primary'
+                    : 'bg-muted text-muted-foreground border-border opacity-40 cursor-not-allowed',
+                ].join(' ')}
+              >
+                {f}
+              </button>
+            );
+          })}
+        </div>
+
+        <button
+          onClick={reset}
+          className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground px-4 py-3 border border-dashed border-border rounded-lg hover:border-foreground transition-colors shrink-0"
+        >
+          <RotateCcw size={14} />
+          {t.resetFilters}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-5">
@@ -61,18 +135,14 @@ const FilterWidget = ({ onSelection }: { onSelection?: () => void } = {}) => {
           />
           <Select
             value={filters.model}
-            onChange={(v) => {
-              setModel(v || null);
-            }}
+            onChange={(v) => setModel(v || null)}
             options={brand?.models.map((m) => m.name) ?? []}
             placeholder={t.selectModel}
             disabled={!brand}
           />
           <Select
             value={filters.generation}
-            onChange={(v) => {
-              setGeneration(v || null);
-            }}
+            onChange={(v) => setGeneration(v || null)}
             options={model?.generations.map((g) => g.generationName) ?? []}
             placeholder={t.selectGeneration}
             disabled={!model}
