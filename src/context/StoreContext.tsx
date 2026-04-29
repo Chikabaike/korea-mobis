@@ -199,7 +199,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     <StoreContext.Provider
       value={{
         parts, brands, categories, settings, loading,
-        upsertPart, deletePart, setCategoriesList, setBrandsList,
+        upsertPart, deletePart, setCategoriesList, renameCategory, setBrandsList,
         saveSettings, uploadImage, reload,
       }}
     >
