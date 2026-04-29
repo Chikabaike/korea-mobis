@@ -20,7 +20,7 @@ const Header = () => {
           <div className="flex items-center justify-between gap-3 sm:gap-6 py-1.5 text-xs sm:text-sm">
             <div className="flex flex-col gap-0.5 min-w-0">
               <a
-                href="https://yandex.com/maps/?text=%D0%B3.%D0%91%D0%B8%D1%88%D0%BA%D0%B5%D0%BA%2C%20%D1%80%D1%8B%D0%BD%D0%BE%D0%BA%20%D0%9A%D1%83%D0%B4%D0%B0%D0%B9%D0%B1%D0%B5%D1%80%D0%B3%D0%B5%D0%BD%20%D0%A0%D1%8F%D0%B4%2018%20%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%B9%D0%BD%D0%B5%D1%80%2033-34"
+                href="https://yandex.com/maps/10309/bishkek/?ll=74.521744%2C42.881923&mode=poi&poi%5Bpoint%5D=74.521482%2C42.881651&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D129445298918&z=19.56"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors truncate"
