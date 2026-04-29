@@ -111,20 +111,6 @@ const Header = () => {
           />
         </div>
 
-        {/* Info bar */}
-        <div className="hidden md:flex flex-wrap items-center gap-x-6 gap-y-1 text-xs text-muted-foreground py-2 border-t border-border">
-          <div className="flex items-center gap-1.5">
-            <MapPin size={13} className="text-primary" />
-            {address}
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Clock size={13} className="text-primary" />
-            {workHours}
-          </div>
-          <div className="md:ml-auto text-[10px] uppercase tracking-widest font-bold text-accent">
-            {t.inStock}: 12 000+ позиций
-          </div>
-        </div>
       </div>
     </header>
   );
