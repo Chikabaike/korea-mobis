@@ -74,9 +74,9 @@ const Header = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="WhatsApp"
-                    className="text-green-600 hover:text-green-500 transition-colors"
+                    className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <MessageCircle size={14} fill="currentColor" />
+                    <img src={whatsappIcon} alt="WhatsApp" className="w-4 h-4 object-contain" />
                   </a>
                 </div>
               </div>
