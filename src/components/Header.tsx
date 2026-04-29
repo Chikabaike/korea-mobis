@@ -1,4 +1,4 @@
-import { Search, MapPin, Clock, Phone, Languages, Wrench, Settings } from 'lucide-react';
+import { Search, MapPin, Clock, Phone, Wrench, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -9,10 +9,10 @@ import instagramIcon from '@/assets/instagram.png';
 
 const Header = () => {
   const { filters, setSearchQuery } = useFilter();
-  const { language, setLanguage, t } = useLanguage();
+  const { t } = useLanguage();
   const { settings } = useStore();
-  const address = language === 'ru' ? settings.addressRu : settings.addressKg;
-  const workHours = language === 'ru' ? settings.workHoursRu : settings.workHoursKg;
+  const address = settings.addressRu;
+  const workHours = settings.workHoursRu;
 
   return (
     <header className="bg-card border-b border-border shrink-0">
@@ -148,13 +148,6 @@ const Header = () => {
             >
               <Phone size={16} />
             </a>
-            <button
-              onClick={() => setLanguage(language === 'ru' ? 'kg' : 'ru')}
-              className="flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5 rounded-md hover:bg-muted"
-            >
-              <Languages size={14} />
-              {language.toUpperCase()}
-            </button>
             <Link
               to="/admin"
               aria-label="Админ-панель"
