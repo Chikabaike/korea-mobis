@@ -426,8 +426,10 @@ const CarsTab = () => {
             key={b.name}
             brand={b}
             onRemoveBrand={() => removeBrand(b.name)}
+            onRenameBrand={() => renameBrand(b.name)}
             onAddModel={(m) => addModel(b.name, m)}
             onRemoveModel={(m) => removeModel(b.name, m)}
+            onRenameModel={(m) => renameModel(b.name, m)}
             onUpdateModel={(m, fn) => updateModel(b.name, m, fn)}
           />
         ))}
