@@ -485,6 +485,17 @@ const ModelBlock = ({ model, onRemove, onRename, onUpdate }: { model: ModelData;
 
   const removeGen = (name: string) => onUpdate((m) => ({ ...m, generations: m.generations.filter((g) => g.generationName !== name) }));
 
+  const renameGen = (oldName: string) => {
+    const v = prompt('Новое название поколения:', oldName);
+    if (v === null) return;
+    const trimmed = v.trim();
+    if (!trimmed || trimmed === oldName) return;
+    onUpdate((m) => {
+      if (m.generations.some((g) => g.generationName === trimmed)) return m;
+      return { ...m, generations: m.generations.map((g) => g.generationName === oldName ? { ...g, generationName: trimmed } : g) };
+    });
+  };
+
   const toggleFuel = (genName: string, f: FuelType) => onUpdate((m) => ({
     ...m,
     generations: m.generations.map((g) => g.generationName === genName ? { ...g, fuels: g.fuels.includes(f) ? g.fuels.filter((x) => x !== f) : [...g.fuels, f] } : g),
@@ -492,8 +503,9 @@ const ModelBlock = ({ model, onRemove, onRename, onUpdate }: { model: ModelData;
 
   return (
     <div className="bg-muted/40 rounded-lg p-3 space-y-2">
-      <div className="flex items-center justify-between">
-        <span className="font-semibold text-sm">{model.name}</span>
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-semibold text-sm flex-1 min-w-0 truncate">{model.name}</span>
+        <button onClick={onRename} title="Переименовать" className="text-muted-foreground hover:text-foreground p-1"><Settings size={12} /></button>
         <button onClick={onRemove} className="text-destructive p-1"><Trash2 size={12} /></button>
       </div>
       <div className="flex gap-2">
@@ -502,8 +514,9 @@ const ModelBlock = ({ model, onRemove, onRename, onUpdate }: { model: ModelData;
       </div>
       {model.generations.map((g: GenerationData) => (
         <div key={g.generationName} className="bg-card rounded-md p-2 text-xs space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span>{g.generationName}</span>
+          <div className="flex items-center justify-between gap-2">
+            <span className="flex-1 min-w-0 truncate">{g.generationName}</span>
+            <button onClick={() => renameGen(g.generationName)} title="Переименовать" className="text-muted-foreground hover:text-foreground"><Settings size={11} /></button>
             <button onClick={() => removeGen(g.generationName)} className="text-destructive"><Trash2 size={11} /></button>
           </div>
           <div className="flex gap-1 flex-wrap">
