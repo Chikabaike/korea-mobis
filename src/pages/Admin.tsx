@@ -438,11 +438,13 @@ const CarsTab = () => {
   );
 };
 
-const BrandBlock = ({ brand, onRemoveBrand, onAddModel, onRemoveModel, onUpdateModel }: {
+const BrandBlock = ({ brand, onRemoveBrand, onRenameBrand, onAddModel, onRemoveModel, onRenameModel, onUpdateModel }: {
   brand: BrandData;
   onRemoveBrand: () => void;
+  onRenameBrand: () => void;
   onAddModel: (name: string) => void;
   onRemoveModel: (name: string) => void;
+  onRenameModel: (name: string) => void;
   onUpdateModel: (name: string, fn: (m: ModelData) => ModelData) => void;
 }) => {
   const [open, setOpen] = useState(false);
@@ -450,10 +452,11 @@ const BrandBlock = ({ brand, onRemoveBrand, onAddModel, onRemoveModel, onUpdateM
 
   return (
     <div className="bg-card border border-border rounded-xl">
-      <div className="flex items-center justify-between p-4">
-        <button onClick={() => setOpen(!open)} className="font-bold text-left flex-1">
+      <div className="flex items-center justify-between p-4 gap-2">
+        <button onClick={() => setOpen(!open)} className="font-bold text-left flex-1 min-w-0 truncate">
           {brand.name} <span className="text-xs text-muted-foreground font-normal">({brand.models.length} моделей)</span>
         </button>
+        <button onClick={onRenameBrand} title="Переименовать" className="text-muted-foreground hover:text-foreground p-1"><Settings size={14} /></button>
         <button onClick={onRemoveBrand} className="text-destructive p-1"><Trash2 size={14} /></button>
       </div>
       {open && (
@@ -463,7 +466,7 @@ const BrandBlock = ({ brand, onRemoveBrand, onAddModel, onRemoveModel, onUpdateM
             <button onClick={() => { if (modelName.trim()) { onAddModel(modelName.trim()); setModelName(''); } }} className="bg-secondary text-secondary-foreground px-3 rounded-lg text-xs font-bold">+ Модель</button>
           </div>
           {brand.models.map((m) => (
-            <ModelBlock key={m.name} model={m} onRemove={() => onRemoveModel(m.name)} onUpdate={(fn) => onUpdateModel(m.name, fn)} />
+            <ModelBlock key={m.name} model={m} onRemove={() => onRemoveModel(m.name)} onRename={() => onRenameModel(m.name)} onUpdate={(fn) => onUpdateModel(m.name, fn)} />
           ))}
         </div>
       )}
@@ -471,7 +474,7 @@ const BrandBlock = ({ brand, onRemoveBrand, onAddModel, onRemoveModel, onUpdateM
   );
 };
 
-const ModelBlock = ({ model, onRemove, onUpdate }: { model: ModelData; onRemove: () => void; onUpdate: (fn: (m: ModelData) => ModelData) => void }) => {
+const ModelBlock = ({ model, onRemove, onRename, onUpdate }: { model: ModelData; onRemove: () => void; onRename: () => void; onUpdate: (fn: (m: ModelData) => ModelData) => void }) => {
   const [genName, setGenName] = useState('');
 
   const addGen = () => {
