@@ -47,7 +47,7 @@ const Header = () => {
                     aria-label="WhatsApp"
                     className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <img src={whatsappIcon} alt="WhatsApp" className="w-4 h-4 object-contain" />
+                    <img src={whatsappIcon} alt="WhatsApp" className="w-5 h-5 object-contain rounded-sm" />
                   </a>
                   <a
                     href="https://www.instagram.com/koreamobis_4444/"
@@ -56,7 +56,7 @@ const Header = () => {
                     aria-label="Instagram"
                     className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <img src={instagramIcon} alt="Instagram" className="w-4 h-4 object-contain" />
+                    <img src={instagramIcon} alt="Instagram" className="w-5 h-5 object-contain rounded-sm" />
                   </a>
                 </div>
               </div>
@@ -86,7 +86,7 @@ const Header = () => {
                     aria-label="WhatsApp"
                     className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <img src={whatsappIcon} alt="WhatsApp" className="w-4 h-4 object-contain" />
+                    <img src={whatsappIcon} alt="WhatsApp" className="w-5 h-5 object-contain rounded-sm" />
                   </a>
                   <a
                     href="https://www.instagram.com/koreamobis_4444/"
@@ -95,7 +95,7 @@ const Header = () => {
                     aria-label="Instagram"
                     className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <img src={instagramIcon} alt="Instagram" className="w-4 h-4 object-contain" />
+                    <img src={instagramIcon} alt="Instagram" className="w-5 h-5 object-contain rounded-sm" />
                   </a>
                 </div>
               </div>
