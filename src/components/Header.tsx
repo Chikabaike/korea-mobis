@@ -1,4 +1,4 @@
-import { Search, MapPin, Clock, Phone, Languages, Wrench } from 'lucide-react';
+import { Search, MapPin, Clock, Phone, Languages, Wrench, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -87,9 +87,11 @@ const Header = () => {
             </button>
             <Link
               to="/admin"
-              className="hidden sm:inline-flex text-[10px] font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground px-2.5 py-1.5 rounded-md hover:bg-muted"
+              aria-label="Админ-панель"
+              title="Админ-панель"
+              className="w-9 h-9 rounded-md flex items-center justify-center text-foreground hover:bg-muted hover:text-primary transition-colors"
             >
-              Admin
+              <Settings size={18} />
             </Link>
           </div>
         </div>
