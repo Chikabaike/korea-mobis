@@ -1,4 +1,4 @@
-import { Search, MapPin, Clock, Phone, Languages, Wrench, Settings } from 'lucide-react';
+import { Search, MapPin, Clock, Phone, Wrench, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
