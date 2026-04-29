@@ -109,6 +109,7 @@ const FilterWidget = ({
               </button>
             );
           })}
+          </div>
         </div>
 
         <button
