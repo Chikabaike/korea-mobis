@@ -141,7 +141,18 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     await reload();
   };
 
-  const setBrandsList = async (next: BrandData[]) => {
+  const renameCategory = async (oldName: string, newName: string) => {
+    const v = newName.trim();
+    if (!v || v === oldName) return;
+    if (categories.includes(v)) throw new Error('Категория с таким именем уже существует');
+    const { error: cErr } = await supabase.from('categories').update({ name: v }).eq('name', oldName);
+    if (cErr) throw cErr;
+    // Update referencing parts
+    const { error: pErr } = await supabase.from('parts').update({ category: v }).eq('category', oldName);
+    if (pErr) throw pErr;
+    await reload();
+  };
+
     const currentNames = new Set(brands.map((b) => b.name));
     const desiredNames = new Set(next.map((b) => b.name));
     const toDelete = [...currentNames].filter((n) => !desiredNames.has(n));
