@@ -153,7 +153,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       await supabase
         .from('brands')
         .upsert(
-          { name: b.name, models: b.models as unknown as object[], position: i + 1 },
+          [{ name: b.name, models: b.models as any, position: i + 1 }],
           { onConflict: 'name' }
         );
     }
