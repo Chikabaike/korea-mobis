@@ -382,11 +382,32 @@ const CarsTab = () => {
     update(brands.filter((b) => b.name !== name));
   };
 
+  const renameBrand = (oldName: string) => {
+    const v = prompt('Новое название марки:', oldName);
+    if (v === null) return;
+    const trimmed = v.trim();
+    if (!trimmed || trimmed === oldName) return;
+    if (brands.some((b) => b.name === trimmed)) { toast.error('Марка с таким именем уже есть'); return; }
+    update(brands.map((b) => b.name === oldName ? { ...b, name: trimmed } : b));
+  };
+
   const addModel = (brandName: string, modelName: string) =>
     update(brands.map((b) => b.name === brandName ? { ...b, models: [...b.models, { name: modelName, generations: [] }] } : b));
 
   const removeModel = (brandName: string, modelName: string) =>
     update(brands.map((b) => b.name === brandName ? { ...b, models: b.models.filter((m) => m.name !== modelName) } : b));
+
+  const renameModel = (brandName: string, oldName: string) => {
+    const v = prompt('Новое название модели:', oldName);
+    if (v === null) return;
+    const trimmed = v.trim();
+    if (!trimmed || trimmed === oldName) return;
+    update(brands.map((b) => {
+      if (b.name !== brandName) return b;
+      if (b.models.some((m) => m.name === trimmed)) { toast.error('Модель с таким именем уже есть'); return b; }
+      return { ...b, models: b.models.map((m) => m.name === oldName ? { ...m, name: trimmed } : m) };
+    }));
+  };
 
   const updateModel = (brandName: string, modelName: string, fn: (m: ModelData) => ModelData) =>
     update(brands.map((b) => b.name === brandName ? { ...b, models: b.models.map((m) => m.name === modelName ? fn(m) : m) } : b));
