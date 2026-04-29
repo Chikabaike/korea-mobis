@@ -1,4 +1,4 @@
-import { ChevronDown, RotateCcw, Fuel } from 'lucide-react';
+import { ChevronDown, RotateCcw, Fuel, ArrowRight } from 'lucide-react';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
@@ -40,11 +40,14 @@ const Select = ({
 const FilterWidget = ({
   onSelection,
   orientation = 'vertical',
+  onGo,
 }: {
   onSelection?: () => void;
   orientation?: 'vertical' | 'horizontal';
+  onGo?: () => void;
 } = {}) => {
   const { filters, setBrand, setModel, setGeneration, setFuel, reset } = useFilter();
+  const canGo = !!filters.brand;
   const { t } = useLanguage();
   const { brands: BRANDS } = useStore();
 
@@ -113,11 +116,12 @@ const FilterWidget = ({
         </div>
 
         <button
-          onClick={reset}
-          className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground px-4 py-3 border border-dashed border-border rounded-lg hover:border-foreground transition-colors shrink-0"
+          onClick={() => { onGo?.(); }}
+          disabled={!canGo}
+          className="flex items-center justify-center gap-2 text-xs font-black uppercase tracking-wider px-5 py-3 rounded-lg shrink-0 transition-all bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed shadow-md"
         >
-          <RotateCcw size={14} />
-          {t.resetFilters}
+          Перейти
+          <ArrowRight size={14} />
         </button>
       </div>
     );
