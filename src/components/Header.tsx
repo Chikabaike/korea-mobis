@@ -48,9 +48,9 @@ const Header = () => {
             <div>
               <div className="text-base sm:text-lg font-black tracking-tight text-foreground leading-none">
                 <span className="text-red-600">КОРЕЯ</span>
-                <span>-MB</span>
+                <span>-M</span>
                 <span className="text-red-600">O</span>
-                <span>IS</span>
+                <span>BIS</span>
               </div>
             </div>
           </div>
