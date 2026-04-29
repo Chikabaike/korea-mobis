@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Lock, LogOut, Plus, Trash2, Save, ArrowLeft, Pencil, X, Loader2 } from 'lucide-react';
+import { Lock, LogOut, Plus, Trash2, Save, ArrowLeft, Pencil, X, Loader2, Settings } from 'lucide-react';
 import { StoreProvider, useStore } from '@/context/StoreContext';
 import { supabase } from '@/integrations/supabase/client';
 import type { Session } from '@supabase/supabase-js';
@@ -313,7 +313,7 @@ const Field = ({ label, children }: { label: string; children: React.ReactNode }
 /* ============================ CATEGORIES ============================ */
 
 const CategoriesTab = () => {
-  const { categories, setCategoriesList, parts } = useStore();
+  const { categories, setCategoriesList, renameCategory, parts } = useStore();
   const [name, setName] = useState('');
 
   const add = async () => {
@@ -330,6 +330,13 @@ const CategoriesTab = () => {
     catch (e) { toast.error(e instanceof Error ? e.message : 'Ошибка'); }
   };
 
+  const rename = async (c: string) => {
+    const v = prompt('Новое название категории:', c);
+    if (v === null) return;
+    try { await renameCategory(c, v); toast.success('Переименовано'); }
+    catch (e) { toast.error(e instanceof Error ? e.message : 'Ошибка'); }
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-black">Категории ({categories.length})</h2>
@@ -341,7 +348,10 @@ const CategoriesTab = () => {
         {categories.map((c) => (
           <div key={c} className="flex items-center justify-between bg-card border border-border rounded-lg px-4 py-3">
             <span className="font-medium text-sm">{c}</span>
-            <button onClick={() => remove(c)} className="text-destructive p-1 hover:opacity-70"><Trash2 size={14} /></button>
+            <div className="flex items-center gap-1">
+              <button onClick={() => rename(c)} title="Переименовать" className="text-muted-foreground hover:text-foreground p-1"><Settings size={14} /></button>
+              <button onClick={() => remove(c)} className="text-destructive p-1 hover:opacity-70"><Trash2 size={14} /></button>
+            </div>
           </div>
         ))}
       </div>
@@ -372,11 +382,32 @@ const CarsTab = () => {
     update(brands.filter((b) => b.name !== name));
   };
 
+  const renameBrand = (oldName: string) => {
+    const v = prompt('Новое название марки:', oldName);
+    if (v === null) return;
+    const trimmed = v.trim();
+    if (!trimmed || trimmed === oldName) return;
+    if (brands.some((b) => b.name === trimmed)) { toast.error('Марка с таким именем уже есть'); return; }
+    update(brands.map((b) => b.name === oldName ? { ...b, name: trimmed } : b));
+  };
+
   const addModel = (brandName: string, modelName: string) =>
     update(brands.map((b) => b.name === brandName ? { ...b, models: [...b.models, { name: modelName, generations: [] }] } : b));
 
   const removeModel = (brandName: string, modelName: string) =>
     update(brands.map((b) => b.name === brandName ? { ...b, models: b.models.filter((m) => m.name !== modelName) } : b));
+
+  const renameModel = (brandName: string, oldName: string) => {
+    const v = prompt('Новое название модели:', oldName);
+    if (v === null) return;
+    const trimmed = v.trim();
+    if (!trimmed || trimmed === oldName) return;
+    update(brands.map((b) => {
+      if (b.name !== brandName) return b;
+      if (b.models.some((m) => m.name === trimmed)) { toast.error('Модель с таким именем уже есть'); return b; }
+      return { ...b, models: b.models.map((m) => m.name === oldName ? { ...m, name: trimmed } : m) };
+    }));
+  };
 
   const updateModel = (brandName: string, modelName: string, fn: (m: ModelData) => ModelData) =>
     update(brands.map((b) => b.name === brandName ? { ...b, models: b.models.map((m) => m.name === modelName ? fn(m) : m) } : b));
@@ -395,8 +426,10 @@ const CarsTab = () => {
             key={b.name}
             brand={b}
             onRemoveBrand={() => removeBrand(b.name)}
+            onRenameBrand={() => renameBrand(b.name)}
             onAddModel={(m) => addModel(b.name, m)}
             onRemoveModel={(m) => removeModel(b.name, m)}
+            onRenameModel={(m) => renameModel(b.name, m)}
             onUpdateModel={(m, fn) => updateModel(b.name, m, fn)}
           />
         ))}
@@ -405,11 +438,13 @@ const CarsTab = () => {
   );
 };
 
-const BrandBlock = ({ brand, onRemoveBrand, onAddModel, onRemoveModel, onUpdateModel }: {
+const BrandBlock = ({ brand, onRemoveBrand, onRenameBrand, onAddModel, onRemoveModel, onRenameModel, onUpdateModel }: {
   brand: BrandData;
   onRemoveBrand: () => void;
+  onRenameBrand: () => void;
   onAddModel: (name: string) => void;
   onRemoveModel: (name: string) => void;
+  onRenameModel: (name: string) => void;
   onUpdateModel: (name: string, fn: (m: ModelData) => ModelData) => void;
 }) => {
   const [open, setOpen] = useState(false);
@@ -417,10 +452,11 @@ const BrandBlock = ({ brand, onRemoveBrand, onAddModel, onRemoveModel, onUpdateM
 
   return (
     <div className="bg-card border border-border rounded-xl">
-      <div className="flex items-center justify-between p-4">
-        <button onClick={() => setOpen(!open)} className="font-bold text-left flex-1">
+      <div className="flex items-center justify-between p-4 gap-2">
+        <button onClick={() => setOpen(!open)} className="font-bold text-left flex-1 min-w-0 truncate">
           {brand.name} <span className="text-xs text-muted-foreground font-normal">({brand.models.length} моделей)</span>
         </button>
+        <button onClick={onRenameBrand} title="Переименовать" className="text-muted-foreground hover:text-foreground p-1"><Settings size={14} /></button>
         <button onClick={onRemoveBrand} className="text-destructive p-1"><Trash2 size={14} /></button>
       </div>
       {open && (
@@ -430,7 +466,7 @@ const BrandBlock = ({ brand, onRemoveBrand, onAddModel, onRemoveModel, onUpdateM
             <button onClick={() => { if (modelName.trim()) { onAddModel(modelName.trim()); setModelName(''); } }} className="bg-secondary text-secondary-foreground px-3 rounded-lg text-xs font-bold">+ Модель</button>
           </div>
           {brand.models.map((m) => (
-            <ModelBlock key={m.name} model={m} onRemove={() => onRemoveModel(m.name)} onUpdate={(fn) => onUpdateModel(m.name, fn)} />
+            <ModelBlock key={m.name} model={m} onRemove={() => onRemoveModel(m.name)} onRename={() => onRenameModel(m.name)} onUpdate={(fn) => onUpdateModel(m.name, fn)} />
           ))}
         </div>
       )}
@@ -438,7 +474,7 @@ const BrandBlock = ({ brand, onRemoveBrand, onAddModel, onRemoveModel, onUpdateM
   );
 };
 
-const ModelBlock = ({ model, onRemove, onUpdate }: { model: ModelData; onRemove: () => void; onUpdate: (fn: (m: ModelData) => ModelData) => void }) => {
+const ModelBlock = ({ model, onRemove, onRename, onUpdate }: { model: ModelData; onRemove: () => void; onRename: () => void; onUpdate: (fn: (m: ModelData) => ModelData) => void }) => {
   const [genName, setGenName] = useState('');
 
   const addGen = () => {
@@ -449,6 +485,17 @@ const ModelBlock = ({ model, onRemove, onUpdate }: { model: ModelData; onRemove:
 
   const removeGen = (name: string) => onUpdate((m) => ({ ...m, generations: m.generations.filter((g) => g.generationName !== name) }));
 
+  const renameGen = (oldName: string) => {
+    const v = prompt('Новое название поколения:', oldName);
+    if (v === null) return;
+    const trimmed = v.trim();
+    if (!trimmed || trimmed === oldName) return;
+    onUpdate((m) => {
+      if (m.generations.some((g) => g.generationName === trimmed)) return m;
+      return { ...m, generations: m.generations.map((g) => g.generationName === oldName ? { ...g, generationName: trimmed } : g) };
+    });
+  };
+
   const toggleFuel = (genName: string, f: FuelType) => onUpdate((m) => ({
     ...m,
     generations: m.generations.map((g) => g.generationName === genName ? { ...g, fuels: g.fuels.includes(f) ? g.fuels.filter((x) => x !== f) : [...g.fuels, f] } : g),
@@ -456,8 +503,9 @@ const ModelBlock = ({ model, onRemove, onUpdate }: { model: ModelData; onRemove:
 
   return (
     <div className="bg-muted/40 rounded-lg p-3 space-y-2">
-      <div className="flex items-center justify-between">
-        <span className="font-semibold text-sm">{model.name}</span>
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-semibold text-sm flex-1 min-w-0 truncate">{model.name}</span>
+        <button onClick={onRename} title="Переименовать" className="text-muted-foreground hover:text-foreground p-1"><Settings size={12} /></button>
         <button onClick={onRemove} className="text-destructive p-1"><Trash2 size={12} /></button>
       </div>
       <div className="flex gap-2">
@@ -466,8 +514,9 @@ const ModelBlock = ({ model, onRemove, onUpdate }: { model: ModelData; onRemove:
       </div>
       {model.generations.map((g: GenerationData) => (
         <div key={g.generationName} className="bg-card rounded-md p-2 text-xs space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span>{g.generationName}</span>
+          <div className="flex items-center justify-between gap-2">
+            <span className="flex-1 min-w-0 truncate">{g.generationName}</span>
+            <button onClick={() => renameGen(g.generationName)} title="Переименовать" className="text-muted-foreground hover:text-foreground"><Settings size={11} /></button>
             <button onClick={() => removeGen(g.generationName)} className="text-destructive"><Trash2 size={11} /></button>
           </div>
           <div className="flex gap-1 flex-wrap">

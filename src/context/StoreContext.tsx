@@ -49,6 +49,7 @@ interface StoreCtx {
   upsertPart: (p: CarPart) => Promise<void>;
   deletePart: (id: string) => Promise<void>;
   setCategoriesList: (c: string[]) => Promise<void>;
+  renameCategory: (oldName: string, newName: string) => Promise<void>;
   setBrandsList: (b: BrandData[]) => Promise<void>;
   saveSettings: (s: SiteSettings) => Promise<void>;
   uploadImage: (file: File) => Promise<string>;
@@ -140,6 +141,18 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     await reload();
   };
 
+  const renameCategory = async (oldName: string, newName: string) => {
+    const v = newName.trim();
+    if (!v || v === oldName) return;
+    if (categories.includes(v)) throw new Error('Категория с таким именем уже существует');
+    const { error: cErr } = await supabase.from('categories').update({ name: v }).eq('name', oldName);
+    if (cErr) throw cErr;
+    // Update referencing parts
+    const { error: pErr } = await supabase.from('parts').update({ category: v }).eq('category', oldName);
+    if (pErr) throw pErr;
+    await reload();
+  };
+
   const setBrandsList = async (next: BrandData[]) => {
     const currentNames = new Set(brands.map((b) => b.name));
     const desiredNames = new Set(next.map((b) => b.name));
@@ -186,7 +199,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     <StoreContext.Provider
       value={{
         parts, brands, categories, settings, loading,
-        upsertPart, deletePart, setCategoriesList, setBrandsList,
+        upsertPart, deletePart, setCategoriesList, renameCategory, setBrandsList,
         saveSettings, uploadImage, reload,
       }}
     >
