@@ -12,6 +12,12 @@ const Catalog = () => {
   const { filters } = useFilter();
   const { t } = useLanguage();
   const [selected, setSelected] = useState<CarPart | null>(null);
+  const [slide, setSlide] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setSlide((s) => (s + 1) % 2), 5000);
+    return () => clearInterval(id);
+  }, []);
 
   const { parts } = useStore();
 
