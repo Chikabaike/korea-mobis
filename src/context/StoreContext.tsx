@@ -49,6 +49,7 @@ interface StoreCtx {
   upsertPart: (p: CarPart) => Promise<void>;
   deletePart: (id: string) => Promise<void>;
   setCategoriesList: (c: string[]) => Promise<void>;
+  renameCategory: (oldName: string, newName: string) => Promise<void>;
   setBrandsList: (b: BrandData[]) => Promise<void>;
   saveSettings: (s: SiteSettings) => Promise<void>;
   uploadImage: (file: File) => Promise<string>;
