@@ -29,7 +29,7 @@ const Catalog = () => {
       }
       if (filters.searchQuery) {
         const q = filters.searchQuery.toLowerCase();
-        const hay = [p.name, p.category, p.partNumber ?? ''].join(' ').toLowerCase();
+        const hay = [p.name, p.category, p.partNumber ?? '', ...(p.partNumbers ?? [])].join(' ').toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
