@@ -40,20 +40,10 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
             <h2 className="text-xl sm:text-2xl font-black text-foreground leading-tight">{part.name}</h2>
           </div>
 
-          {(part.partNumber || part.vin) && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-              {part.partNumber && (
-                <div className="bg-muted rounded-lg px-3 py-2">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-0.5">Номер запчасти</div>
-                  <div className="font-semibold text-foreground break-all">{part.partNumber}</div>
-                </div>
-              )}
-              {part.vin && (
-                <div className="bg-muted rounded-lg px-3 py-2">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-0.5">VIN-код</div>
-                  <div className="font-semibold text-foreground break-all">{part.vin}</div>
-                </div>
-              )}
+          {part.partNumber && (
+            <div className="bg-muted rounded-lg px-3 py-2 text-xs">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-0.5">Номер запчасти</div>
+              <div className="font-semibold text-foreground break-all">{part.partNumber}</div>
             </div>
           )}
 

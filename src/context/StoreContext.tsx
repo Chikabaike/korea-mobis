@@ -21,7 +21,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
 interface DbPart {
   id: string; name: string; category: string; price: number;
   image: string; compatibility: unknown; cars: unknown;
-  part_number?: string | null; vin?: string | null;
+  part_number?: string | null;
 }
 interface DbBrand { id: string; name: string; models: unknown; position: number; }
 
@@ -34,7 +34,6 @@ const mapPart = (r: DbPart): CarPart => ({
   compatibility: (r.compatibility as CarPart['compatibility']) ?? [],
   cars: (r.cars as CarPart['cars']) ?? [],
   partNumber: r.part_number ?? '',
-  vin: r.vin ?? '',
 });
 
 const mapBrand = (r: DbBrand): BrandData => ({
@@ -111,7 +110,6 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       compatibility: p.compatibility,
       cars: p.cars ?? [],
       part_number: p.partNumber ?? '',
-      vin: p.vin ?? '',
     };
     if (isUuid) {
       const { error } = await supabase.from('parts').update(payload).eq('id', p.id);

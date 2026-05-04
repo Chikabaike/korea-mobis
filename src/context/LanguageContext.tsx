@@ -3,7 +3,7 @@ import type { Language } from '../types';
 
 const translations = {
   ru: {
-    searchPlaceholder: 'Поиск по наименованию, номеру запчасти или VIN...',
+    searchPlaceholder: 'Поиск по наименованию или номеру запчасти...',
     selectBrand: 'Выберите марку',
     selectModel: 'Выберите модель',
     selectGeneration: 'Выберите поколение',
@@ -26,7 +26,7 @@ const translations = {
     inStock: 'В наличии',
   },
   kg: {
-    searchPlaceholder: 'Аталышы, запчасть номери же VIN боюнча издөө...',
+    searchPlaceholder: 'Аталышы же запчасть номери боюнча издөө...',
     selectBrand: 'Марканы тандаңыз',
     selectModel: 'Моделди тандаңыз',
     selectGeneration: 'Муунду тандаңыз',
