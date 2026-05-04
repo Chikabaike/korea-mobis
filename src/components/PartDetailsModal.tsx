@@ -88,22 +88,11 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-            <div>
-              <div className="text-2xl sm:text-3xl font-black text-foreground leading-none">
-                {part.price.toLocaleString('ru-RU')}
-                <span className="text-sm sm:text-base text-muted-foreground font-medium ml-1">сом</span>
-              </div>
+          <div>
+            <div className="text-2xl sm:text-3xl font-black text-foreground leading-none">
+              {part.price.toLocaleString('ru-RU')}
+              <span className="text-sm sm:text-base text-muted-foreground font-medium ml-1">сом</span>
             </div>
-            <a
-              href={`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(`Здравствуйте! Интересует: ${part.name} (AP-${part.id})`)}`}
-              target="_blank"
-              rel="noreferrer"
-              className="w-full sm:w-auto sm:flex-1 sm:max-w-xs flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 sm:py-3.5 px-5 rounded-xl font-bold text-sm hover:opacity-90 active:scale-95 transition-all"
-            >
-              <MessageCircle size={16} />
-              {t.contactWhatsapp}
-            </a>
           </div>
         </div>
       </div>
