@@ -213,7 +213,24 @@ const PartEditor = ({ part, categories, onSave, onCancel }: {
           </select>
         </Field>
         <Field label="Цена (сом)">
-          <input type="number" value={draft.price} onChange={(e) => setDraft({ ...draft, price: Number(e.target.value) })} className="input" />
+          <div className="space-y-2">
+            <input
+              type="number"
+              value={draft.price === -1 ? '' : draft.price}
+              onChange={(e) => setDraft({ ...draft, price: Number(e.target.value) })}
+              className="input"
+              disabled={draft.price === -1}
+              placeholder={draft.price === -1 ? 'Договорная' : ''}
+            />
+            <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={draft.price === -1}
+                onChange={(e) => setDraft({ ...draft, price: e.target.checked ? -1 : 0 })}
+              />
+              Договорная цена
+            </label>
+          </div>
         </Field>
         <Field label="Фото запчасти">
           <div className="flex items-center gap-3">
