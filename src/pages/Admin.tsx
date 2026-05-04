@@ -208,10 +208,18 @@ const PartEditor = ({ part, categories, onSave, onCancel }: {
         <Field label="Название">
           <input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} className="input" />
         </Field>
-        <Field label="Артикулы (номера запчасти)">
+        <Field label="Артикул">
+          <input
+            value={draft.partNumber ?? ''}
+            onChange={(e) => setDraft({ ...draft, partNumber: e.target.value })}
+            placeholder="Внутренний артикул"
+            className="input"
+          />
+        </Field>
+        <Field label="Номера запчасти">
           <PartNumbersEditor
-            value={draft.partNumbers && draft.partNumbers.length ? draft.partNumbers : (draft.partNumber ? [draft.partNumber] : [])}
-            onChange={(list) => setDraft({ ...draft, partNumbers: list, partNumber: list[0] ?? '' })}
+            value={draft.partNumbers ?? []}
+            onChange={(list) => setDraft({ ...draft, partNumbers: list })}
           />
         </Field>
         <Field label="Категория">
