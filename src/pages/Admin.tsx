@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Session } from '@supabase/supabase-js';
 import type { BrandData, CarCompatibility, CarPart, FuelType, GenerationData, ModelData } from '@/types';
 import { toast } from 'sonner';
+import { addWatermark } from '@/lib/watermark';
 
 const FUELS: FuelType[] = ['Бензин', 'Дизель', 'LPG/LPI', 'Hybrid'];
 
