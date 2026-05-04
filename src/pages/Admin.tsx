@@ -817,6 +817,7 @@ const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }
     { id: 'categories', label: 'Категории' },
     { id: 'cars', label: 'Авто' },
     { id: 'settings', label: 'Настройки' },
+    { id: 'admins', label: 'Админы' },
   ];
 
   return (
