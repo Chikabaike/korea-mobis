@@ -346,7 +346,7 @@ const PartNumbersEditor = ({ value, onChange }: { value: string[]; onChange: (v:
   );
 };
 
-
+const CarPicker = ({ brands, onAdd }: { brands: BrandData[]; onAdd: (c: CarCompatibility) => void }) => {
   const [brand, setBrand] = useState('');
   const [model, setModel] = useState('');
   const [generation, setGeneration] = useState('');
