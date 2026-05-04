@@ -7,6 +7,7 @@ import LatestPartsSection from '@/components/LatestPartsSection';
 import { FilterProvider } from '@/context/FilterContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { StoreProvider } from '@/context/StoreContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 const AppContent = () => {
   const [showLatest, setShowLatest] = useState(false);
