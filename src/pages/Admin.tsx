@@ -741,12 +741,22 @@ const WatermarkSettingsBlock = () => {
 
 /* ============================ ADMINS ============================ */
 
+export const SUPER_ADMIN_EMAIL = 'pinkerton.7mailru@gmail.com';
+export const isSuperAdminEmail = (e?: string | null) =>
+  (e ?? '').trim().toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase();
+
 type AdminUser = { id: string; email: string; created_at: string; last_sign_in_at: string | null };
 
-const AdminsTab = () => {
+const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
+  const [newEmail, setNewEmail] = useState('');
+  const [newPass, setNewPass] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [pwDraft, setPwDraft] = useState<Record<string, string>>({});
+
+  const isSuper = isSuperAdminEmail(currentEmail);
 
   const load = async () => {
     setLoading(true); setError('');
@@ -765,15 +775,103 @@ const AdminsTab = () => {
 
   const fmt = (s: string | null) => s ? new Date(s).toLocaleString('ru-RU') : '—';
 
+  const createAdmin = async () => {
+    if (!newEmail.trim() || newPass.length < 6) {
+      toast.error('Нужен email и пароль ≥ 6 символов');
+      return;
+    }
+    setBusy(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('manage-admins', {
+        body: { action: 'create', email: newEmail.trim(), password: newPass },
+      });
+      if (error) throw error;
+      if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
+      toast.success('Админ создан');
+      setNewEmail(''); setNewPass('');
+      await load();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Ошибка');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const updatePassword = async (userId: string) => {
+    const pass = pwDraft[userId] ?? '';
+    if (pass.length < 6) { toast.error('Пароль ≥ 6 символов'); return; }
+    setBusy(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('manage-admins', {
+        body: { action: 'update-password', userId, password: pass },
+      });
+      if (error) throw error;
+      if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
+      toast.success('Пароль обновлён');
+      setPwDraft((p) => ({ ...p, [userId]: '' }));
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Ошибка');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const removeAdmin = async (userId: string, email: string) => {
+    if (!confirm(`Удалить аккаунт ${email}?`)) return;
+    setBusy(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('manage-admins', {
+        body: { action: 'delete', userId },
+      });
+      if (error) throw error;
+      if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
+      toast.success('Удалено');
+      await load();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Ошибка');
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-lg font-black">Привязанные email админ-панели</h2>
-          <p className="text-xs text-muted-foreground mt-1">Все аккаунты, имеющие доступ к админке.</p>
+          <p className="text-xs text-muted-foreground mt-1">
+            {isSuper
+              ? 'Вы вошли как главный админ. Можно добавлять и удалять админов, менять пароли.'
+              : 'Просмотр доступен всем админам. Управление — только у главного админа.'}
+          </p>
         </div>
         <button onClick={load} className="text-xs font-bold uppercase px-3 py-2 rounded-lg bg-muted hover:bg-muted/80">Обновить</button>
       </div>
+
+      {isSuper && (
+        <div className="bg-card border border-border rounded-xl p-4 space-y-3">
+          <div className="text-sm font-bold">Добавить нового админа</div>
+          <div className="grid sm:grid-cols-[1fr_1fr_auto] gap-2">
+            <input
+              type="email" placeholder="Email"
+              value={newEmail} onChange={(e) => setNewEmail(e.target.value)}
+              className="input"
+            />
+            <input
+              type="text" placeholder="Пароль (мин. 6 символов)"
+              value={newPass} onChange={(e) => setNewPass(e.target.value)}
+              className="input"
+            />
+            <button
+              onClick={createAdmin}
+              disabled={busy}
+              className="bg-primary text-primary-foreground font-bold rounded-lg px-4 text-sm flex items-center gap-2 disabled:opacity-50"
+            >
+              {busy ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />} Создать
+            </button>
+          </div>
+        </div>
+      )}
 
       {loading ? (
         <div className="flex justify-center py-8"><Loader2 className="animate-spin text-muted-foreground" /></div>
@@ -787,18 +885,61 @@ const AdminsTab = () => {
                 <th className="text-left px-4 py-3 font-bold">Email</th>
                 <th className="text-left px-4 py-3 font-bold">Создан</th>
                 <th className="text-left px-4 py-3 font-bold">Последний вход</th>
+                {isSuper && <th className="text-left px-4 py-3 font-bold">Управление</th>}
               </tr>
             </thead>
             <tbody>
               {users.length === 0 ? (
-                <tr><td colSpan={3} className="px-4 py-6 text-center text-muted-foreground">Нет аккаунтов</td></tr>
-              ) : users.map(u => (
-                <tr key={u.id} className="border-t border-border">
-                  <td className="px-4 py-3 font-semibold">{u.email || '—'}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{fmt(u.created_at)}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{fmt(u.last_sign_in_at)}</td>
-                </tr>
-              ))}
+                <tr><td colSpan={isSuper ? 4 : 3} className="px-4 py-6 text-center text-muted-foreground">Нет аккаунтов</td></tr>
+              ) : users.map(u => {
+                const isThisSuper = isSuperAdminEmail(u.email);
+                return (
+                  <tr key={u.id} className="border-t border-border">
+                    <td className="px-4 py-3 font-semibold">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span>{u.email || '—'}</span>
+                        {isThisSuper && (
+                          <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-primary text-primary-foreground">
+                            Главный
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">{fmt(u.created_at)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{fmt(u.last_sign_in_at)}</td>
+                    {isSuper && (
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <input
+                            type="text"
+                            placeholder="Новый пароль"
+                            value={pwDraft[u.id] ?? ''}
+                            onChange={(e) => setPwDraft((p) => ({ ...p, [u.id]: e.target.value }))}
+                            className="input text-xs py-1.5 w-40"
+                          />
+                          <button
+                            onClick={() => updatePassword(u.id)}
+                            disabled={busy}
+                            className="text-[11px] font-bold px-2 py-1.5 rounded bg-muted hover:bg-muted/80 disabled:opacity-50"
+                          >
+                            Сменить
+                          </button>
+                          {!isThisSuper && (
+                            <button
+                              onClick={() => removeAdmin(u.id, u.email)}
+                              disabled={busy}
+                              className="text-destructive p-1.5 hover:opacity-70 disabled:opacity-50"
+                              title="Удалить"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    )}
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -856,7 +997,7 @@ const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }
             {tab === 'categories' && <CategoriesTab />}
             {tab === 'cars' && <CarsTab />}
             {tab === 'settings' && <SettingsTab />}
-            {tab === 'admins' && <AdminsTab />}
+            {tab === 'admins' && <AdminsTab currentEmail={email} />}
           </>
         )}
       </main>
