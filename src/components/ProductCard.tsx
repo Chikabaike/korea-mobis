@@ -35,6 +35,23 @@ const ProductCard = ({ part, onClick }: { part: CarPart; onClick: () => void }) 
             </span>
           ))}
         </div>
+        {part.cars && part.cars.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {part.cars.slice(0, 3).map((c, i) => (
+              <span
+                key={`${c.brand}-${c.model}-${c.generation ?? 'all'}-${i}`}
+                className="text-[9px] font-semibold px-2 py-0.5 rounded bg-primary/10 text-foreground border border-primary/20"
+              >
+                {c.brand} {c.model}{c.generation ? ` · ${c.generation}` : ''}
+              </span>
+            ))}
+            {part.cars.length > 3 && (
+              <span className="text-[9px] font-semibold px-2 py-0.5 rounded bg-muted text-muted-foreground">
+                +{part.cars.length - 3}
+              </span>
+            )}
+          </div>
+        )}
         <div className="flex items-center justify-between gap-2 pt-2 border-t border-border">
           <div>
             <div className="text-base sm:text-lg font-black text-foreground leading-none">
