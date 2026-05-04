@@ -22,19 +22,26 @@ interface DbPart {
   id: string; name: string; category: string; price: number;
   image: string; compatibility: unknown; cars: unknown;
   part_number?: string | null;
+  part_numbers?: unknown;
 }
 interface DbBrand { id: string; name: string; models: unknown; position: number; }
 
-const mapPart = (r: DbPart): CarPart => ({
-  id: r.id,
-  name: r.name,
-  category: r.category,
-  price: Number(r.price),
-  image: r.image,
-  compatibility: (r.compatibility as CarPart['compatibility']) ?? [],
-  cars: (r.cars as CarPart['cars']) ?? [],
-  partNumber: r.part_number ?? '',
-});
+const mapPart = (r: DbPart): CarPart => {
+  const list = Array.isArray(r.part_numbers) ? (r.part_numbers as string[]).filter(Boolean) : [];
+  const single = r.part_number ?? '';
+  const merged = list.length ? list : (single ? [single] : []);
+  return {
+    id: r.id,
+    name: r.name,
+    category: r.category,
+    price: Number(r.price),
+    image: r.image,
+    compatibility: (r.compatibility as CarPart['compatibility']) ?? [],
+    cars: (r.cars as CarPart['cars']) ?? [],
+    partNumber: merged[0] ?? '',
+    partNumbers: merged,
+  };
+};
 
 const mapBrand = (r: DbBrand): BrandData => ({
   name: r.name,
@@ -105,11 +112,14 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
 
   const upsertPart = async (p: CarPart) => {
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(p.id);
+    const numbers = (p.partNumbers && p.partNumbers.length ? p.partNumbers : (p.partNumber ? [p.partNumber] : []))
+      .map((s) => s.trim()).filter(Boolean);
     const payload: any = {
       name: p.name, category: p.category, price: p.price, image: p.image,
       compatibility: p.compatibility,
       cars: p.cars ?? [],
-      part_number: p.partNumber ?? '',
+      part_number: numbers[0] ?? '',
+      part_numbers: numbers,
     };
     if (isUuid) {
       const { error } = await supabase.from('parts').update(payload).eq('id', p.id);

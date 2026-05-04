@@ -72,6 +72,7 @@ export type Database = {
           image: string
           name: string
           part_number: string
+          part_numbers: Json
           price: number
           updated_at: string
           vin: string
@@ -85,6 +86,7 @@ export type Database = {
           image?: string
           name: string
           part_number?: string
+          part_numbers?: Json
           price?: number
           updated_at?: string
           vin?: string
@@ -98,6 +100,7 @@ export type Database = {
           image?: string
           name?: string
           part_number?: string
+          part_numbers?: Json
           price?: number
           updated_at?: string
           vin?: string

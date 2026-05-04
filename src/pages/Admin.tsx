@@ -101,6 +101,7 @@ const emptyPart = (categories: string[]): CarPart => ({
   compatibility: ['Бензин'],
   cars: [],
   partNumber: '',
+  partNumbers: [],
 });
 
 const PartsTab = () => {
@@ -207,8 +208,11 @@ const PartEditor = ({ part, categories, onSave, onCancel }: {
         <Field label="Название">
           <input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} className="input" />
         </Field>
-        <Field label="Номер запчасти">
-          <input value={draft.partNumber ?? ''} onChange={(e) => setDraft({ ...draft, partNumber: e.target.value })} placeholder="Напр. 28113-2P000" className="input" />
+        <Field label="Артикулы (номера запчасти)">
+          <PartNumbersEditor
+            value={draft.partNumbers && draft.partNumbers.length ? draft.partNumbers : (draft.partNumber ? [draft.partNumber] : [])}
+            onChange={(list) => setDraft({ ...draft, partNumbers: list, partNumber: list[0] ?? '' })}
+          />
         </Field>
         <Field label="Категория">
           <select value={draft.category} onChange={(e) => setDraft({ ...draft, category: e.target.value })} className="input">
@@ -288,6 +292,56 @@ const PartEditor = ({ part, categories, onSave, onCancel }: {
           {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Сохранить
         </button>
       </div>
+    </div>
+  );
+};
+
+const PartNumbersEditor = ({ value, onChange }: { value: string[]; onChange: (v: string[]) => void }) => {
+  const [input, setInput] = useState('');
+
+  const add = () => {
+    const v = input.trim();
+    if (!v) return;
+    if (value.includes(v)) { setInput(''); return; }
+    onChange([...value, v]);
+    setInput('');
+  };
+
+  const remove = (i: number) => onChange(value.filter((_, idx) => idx !== i));
+
+  return (
+    <div className="space-y-2">
+      <div className="flex gap-2">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } }}
+          placeholder="Напр. 28113-2P000"
+          className="input flex-1"
+        />
+        <button
+          type="button"
+          onClick={add}
+          disabled={!input.trim()}
+          className="bg-primary text-primary-foreground rounded-lg px-3 text-xs font-bold disabled:opacity-50 flex items-center gap-1"
+        >
+          <Plus size={12} /> Добавить
+        </button>
+      </div>
+      {value.length === 0 ? (
+        <p className="text-[11px] text-muted-foreground">Артикулы не добавлены.</p>
+      ) : (
+        <div className="flex flex-wrap gap-1.5">
+          {value.map((n, i) => (
+            <span key={n} className="inline-flex items-center gap-1 bg-muted border border-border rounded-full pl-3 pr-1 py-1 text-xs font-semibold">
+              {n}
+              <button type="button" onClick={() => remove(i)} className="text-destructive p-0.5 hover:opacity-70" aria-label="Удалить">
+                <X size={12} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

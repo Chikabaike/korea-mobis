@@ -15,6 +15,7 @@ export interface CarPart {
   compatibility: FuelType[];
   cars?: CarCompatibility[];
   partNumber?: string;
+  partNumbers?: string[];
 }
 
 export interface GenerationData {
