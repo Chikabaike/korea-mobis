@@ -179,9 +179,10 @@ const PartEditor = ({ part, categories, onSave, onCancel }: {
     if (!file) return;
     setUploading(true);
     try {
-      const url = await uploadImage(file);
+      const watermarked = await addWatermark(file);
+      const url = await uploadImage(watermarked);
       setDraft({ ...draft, image: url });
-      toast.success('Фото загружено');
+      toast.success('Фото загружено с водяным знаком');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Не удалось загрузить фото');
     } finally {
