@@ -155,6 +155,32 @@ const Header = () => {
 
           {/* Right meta */}
           <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            <div className="flex items-center gap-1 rounded-full border border-border bg-muted p-0.5 text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => setLanguage('ru')}
+                className={`px-2 py-1 rounded-full transition-colors ${language === 'ru' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                aria-label="Русский"
+              >
+                RU
+              </button>
+              <button
+                type="button"
+                onClick={() => setLanguage('kg')}
+                className={`px-2 py-1 rounded-full transition-colors ${language === 'kg' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                aria-label="Кыргызча"
+              >
+                KG
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
+              className="p-2 rounded-full border border-border bg-muted hover:bg-accent hover:text-accent-foreground transition-colors"
+            >
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
             <a
               href={`tel:${settings.phone}`}
               className="hidden lg:flex items-center gap-2 text-sm font-semibold text-foreground hover:text-primary transition-colors"
