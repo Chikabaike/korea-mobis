@@ -58,6 +58,25 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
             </div>
           </div>
 
+          {part.cars && part.cars.length > 0 && (
+            <div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                Подходит на авто
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {part.cars.map((c, i) => (
+                  <span
+                    key={`${c.brand}-${c.model}-${c.generation ?? 'all'}-${i}`}
+                    className="text-xs font-semibold bg-primary/10 text-foreground px-3 py-1 rounded-full border border-primary/20"
+                  >
+                    {c.brand} {c.model}
+                    {c.generation ? ` · ${c.generation}` : ''}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-3 py-3 border-y border-border">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <ShieldCheck size={16} className="text-primary" />
