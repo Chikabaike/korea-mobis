@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Session } from '@supabase/supabase-js';
 import type { BrandData, CarCompatibility, CarPart, FuelType, GenerationData, ModelData } from '@/types';
 import { toast } from 'sonner';
+import { addWatermark } from '@/lib/watermark';
 
 const FUELS: FuelType[] = ['Бензин', 'Дизель', 'LPG/LPI', 'Hybrid'];
 
@@ -179,9 +180,10 @@ const PartEditor = ({ part, categories, onSave, onCancel }: {
     if (!file) return;
     setUploading(true);
     try {
-      const url = await uploadImage(file);
+      const watermarked = await addWatermark(file);
+      const url = await uploadImage(watermarked);
       setDraft({ ...draft, image: url });
-      toast.success('Фото загружено');
+      toast.success('Фото загружено с водяным знаком');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Не удалось загрузить фото');
     } finally {
