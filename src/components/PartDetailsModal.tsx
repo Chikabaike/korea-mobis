@@ -40,22 +40,29 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
             <h2 className="text-xl sm:text-2xl font-black text-foreground leading-tight">{part.name}</h2>
           </div>
 
-          {(() => {
-            const nums = (part.partNumbers && part.partNumbers.length ? part.partNumbers : (part.partNumber ? [part.partNumber] : []));
-            if (!nums.length) return null;
-            return (
-              <div className="bg-muted rounded-lg px-3 py-2 text-xs">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
-                  {nums.length > 1 ? 'Артикулы' : 'Номер запчасти'}
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {nums.map((n) => (
-                    <span key={n} className="font-semibold text-foreground bg-card border border-border rounded px-2 py-0.5 break-all">{n}</span>
-                  ))}
-                </div>
+          {part.partNumber && (
+            <div className="bg-muted rounded-lg px-3 py-2 text-xs">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
+                Артикул
               </div>
-            );
-          })()}
+              <span className="font-semibold text-foreground bg-card border border-border rounded px-2 py-0.5 break-all inline-block">
+                {part.partNumber}
+              </span>
+            </div>
+          )}
+
+          {part.partNumbers && part.partNumbers.length > 0 && (
+            <div className="bg-muted rounded-lg px-3 py-2 text-xs">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
+                {part.partNumbers.length > 1 ? 'Номера запчасти' : 'Номер запчасти'}
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {part.partNumbers.map((n) => (
+                  <span key={n} className="font-semibold text-foreground bg-card border border-border rounded px-2 py-0.5 break-all">{n}</span>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div>
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-2">{t.compatibility}</div>
