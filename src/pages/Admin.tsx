@@ -296,7 +296,57 @@ const PartEditor = ({ part, categories, onSave, onCancel }: {
   );
 };
 
-const CarPicker = ({ brands, onAdd }: { brands: BrandData[]; onAdd: (c: CarCompatibility) => void }) => {
+const PartNumbersEditor = ({ value, onChange }: { value: string[]; onChange: (v: string[]) => void }) => {
+  const [input, setInput] = useState('');
+
+  const add = () => {
+    const v = input.trim();
+    if (!v) return;
+    if (value.includes(v)) { setInput(''); return; }
+    onChange([...value, v]);
+    setInput('');
+  };
+
+  const remove = (i: number) => onChange(value.filter((_, idx) => idx !== i));
+
+  return (
+    <div className="space-y-2">
+      <div className="flex gap-2">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } }}
+          placeholder="Напр. 28113-2P000"
+          className="input flex-1"
+        />
+        <button
+          type="button"
+          onClick={add}
+          disabled={!input.trim()}
+          className="bg-primary text-primary-foreground rounded-lg px-3 text-xs font-bold disabled:opacity-50 flex items-center gap-1"
+        >
+          <Plus size={12} /> Добавить
+        </button>
+      </div>
+      {value.length === 0 ? (
+        <p className="text-[11px] text-muted-foreground">Артикулы не добавлены.</p>
+      ) : (
+        <div className="flex flex-wrap gap-1.5">
+          {value.map((n, i) => (
+            <span key={n} className="inline-flex items-center gap-1 bg-muted border border-border rounded-full pl-3 pr-1 py-1 text-xs font-semibold">
+              {n}
+              <button type="button" onClick={() => remove(i)} className="text-destructive p-0.5 hover:opacity-70" aria-label="Удалить">
+                <X size={12} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+
   const [brand, setBrand] = useState('');
   const [model, setModel] = useState('');
   const [generation, setGeneration] = useState('');
