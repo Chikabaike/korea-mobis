@@ -35,7 +35,7 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
         <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto">
           <div>
             <div className="text-xs uppercase tracking-widest text-muted-foreground font-bold mb-1">
-              {t.art}: AP-{part.id.slice(0, 5).toUpperCase()}
+              ​
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-foreground leading-tight">{part.name}</h2>
           </div>
