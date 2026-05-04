@@ -29,7 +29,8 @@ const Catalog = () => {
       }
       if (filters.searchQuery) {
         const q = filters.searchQuery.toLowerCase();
-        if (!p.name.toLowerCase().includes(q) && !p.category.toLowerCase().includes(q)) return false;
+        const hay = [p.name, p.category, p.partNumber ?? '', p.vin ?? ''].join(' ').toLowerCase();
+        if (!hay.includes(q)) return false;
       }
       return true;
     });
