@@ -52,7 +52,7 @@ const Login = () => {
             <Lock size={20} className="text-primary" />
           </div>
           <h1 className="text-xl font-black text-foreground">Админ-панель</h1>
-          <p className="text-xs text-muted-foreground">{mode === 'login' ? 'Вход для владельца' : 'Создать аккаунт владельца'}</p>
+          <p className="text-xs text-muted-foreground">Вход для владельца</p>
         </div>
         <input
           type="email" autoFocus required value={email}
@@ -70,13 +70,6 @@ const Login = () => {
         <button type="submit" disabled={busy} className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-lg text-sm hover:opacity-90 transition disabled:opacity-50 flex items-center justify-center gap-2">
           {busy && <Loader2 size={14} className="animate-spin" />}
           {mode === 'login' ? 'Войти' : 'Создать аккаунт'}
-        </button>
-        <button
-          type="button"
-          onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(''); }}
-          className="w-full text-xs text-muted-foreground hover:text-foreground"
-        >
-          {mode === 'login' ? 'Первый вход? Создать аккаунт владельца' : 'Уже есть аккаунт? Войти'}
         </button>
         <Link to="/" className="flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground">
           <ArrowLeft size={12} /> На сайт
