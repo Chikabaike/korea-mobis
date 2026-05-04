@@ -88,7 +88,7 @@ const Login = () => {
 
 /* ============================ TABS ============================ */
 
-type Tab = 'parts' | 'categories' | 'cars' | 'settings';
+type Tab = 'parts' | 'categories' | 'cars' | 'settings' | 'admins';
 
 /* ============================ PARTS ============================ */
 
@@ -739,7 +739,75 @@ const WatermarkSettingsBlock = () => {
   );
 };
 
-/* ============================ SHELL ============================ */
+/* ============================ ADMINS ============================ */
+
+type AdminUser = { id: string; email: string; created_at: string; last_sign_in_at: string | null };
+
+const AdminsTab = () => {
+  const [users, setUsers] = useState<AdminUser[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>('');
+
+  const load = async () => {
+    setLoading(true); setError('');
+    try {
+      const { data, error } = await supabase.functions.invoke('list-admin-emails');
+      if (error) throw error;
+      setUsers((data as { users: AdminUser[] }).users ?? []);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Ошибка загрузки');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const fmt = (s: string | null) => s ? new Date(s).toLocaleString('ru-RU') : '—';
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-black">Привязанные email админ-панели</h2>
+          <p className="text-xs text-muted-foreground mt-1">Все аккаунты, имеющие доступ к админке.</p>
+        </div>
+        <button onClick={load} className="text-xs font-bold uppercase px-3 py-2 rounded-lg bg-muted hover:bg-muted/80">Обновить</button>
+      </div>
+
+      {loading ? (
+        <div className="flex justify-center py-8"><Loader2 className="animate-spin text-muted-foreground" /></div>
+      ) : error ? (
+        <div className="text-sm text-destructive bg-destructive/10 border border-destructive/30 rounded-lg p-3">{error}</div>
+      ) : (
+        <div className="bg-card border border-border rounded-xl overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
+              <tr>
+                <th className="text-left px-4 py-3 font-bold">Email</th>
+                <th className="text-left px-4 py-3 font-bold">Создан</th>
+                <th className="text-left px-4 py-3 font-bold">Последний вход</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.length === 0 ? (
+                <tr><td colSpan={3} className="px-4 py-6 text-center text-muted-foreground">Нет аккаунтов</td></tr>
+              ) : users.map(u => (
+                <tr key={u.id} className="border-t border-border">
+                  <td className="px-4 py-3 font-semibold">{u.email || '—'}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{fmt(u.created_at)}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{fmt(u.last_sign_in_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
 
 const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }) => {
   const [tab, setTab] = useState<Tab>('parts');
@@ -749,6 +817,7 @@ const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }
     { id: 'categories', label: 'Категории' },
     { id: 'cars', label: 'Авто' },
     { id: 'settings', label: 'Настройки' },
+    { id: 'admins', label: 'Админы' },
   ];
 
   return (
@@ -787,6 +856,7 @@ const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }
             {tab === 'categories' && <CategoriesTab />}
             {tab === 'cars' && <CarsTab />}
             {tab === 'settings' && <SettingsTab />}
+            {tab === 'admins' && <AdminsTab />}
           </>
         )}
       </main>
