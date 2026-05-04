@@ -90,8 +90,14 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
 
           <div>
             <div className="text-2xl sm:text-3xl font-black text-foreground leading-none">
-              {part.price.toLocaleString('ru-RU')}
-              <span className="text-sm sm:text-base text-muted-foreground font-medium ml-1">сом</span>
+              {part.price === -1 ? (
+                'Договорная'
+              ) : (
+                <>
+                  {part.price.toLocaleString('ru-RU')}
+                  <span className="text-sm sm:text-base text-muted-foreground font-medium ml-1">сом</span>
+                </>
+              )}
             </div>
           </div>
         </div>
