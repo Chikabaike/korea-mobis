@@ -71,13 +71,6 @@ const Login = () => {
           {busy && <Loader2 size={14} className="animate-spin" />}
           {mode === 'login' ? 'Войти' : 'Создать аккаунт'}
         </button>
-        <button
-          type="button"
-          onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(''); }}
-          className="w-full text-xs text-muted-foreground hover:text-foreground"
-        >
-          {mode === 'login' ? 'Первый вход? Создать аккаунт владельца' : 'Уже есть аккаунт? Войти'}
-        </button>
         <Link to="/" className="flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground">
           <ArrowLeft size={12} /> На сайт
         </Link>
