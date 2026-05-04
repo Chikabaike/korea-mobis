@@ -21,7 +21,7 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
         className="bg-card w-full max-w-2xl rounded-t-3xl sm:rounded-3xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 max-h-[90vh] flex flex-col"
       >
         <div className="relative shrink-0">
-          <img src={part.image} alt={part.name} className="w-full h-48 sm:h-72 lg:h-80 object-cover" />
+          <img src={part.image} alt={part.name} className="w-full h-48 sm:h-72 lg:h-80 object-contain bg-muted" />
           <button
             onClick={onClose}
             className="absolute top-4 right-4 w-10 h-10 rounded-full bg-card/95 backdrop-blur flex items-center justify-center hover:bg-card transition-colors"
