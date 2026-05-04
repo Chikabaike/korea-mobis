@@ -71,8 +71,10 @@ export type Database = {
           id: string
           image: string
           name: string
+          part_number: string
           price: number
           updated_at: string
+          vin: string
         }
         Insert: {
           cars?: Json
@@ -82,8 +84,10 @@ export type Database = {
           id?: string
           image?: string
           name: string
+          part_number?: string
           price?: number
           updated_at?: string
+          vin?: string
         }
         Update: {
           cars?: Json
@@ -93,8 +97,10 @@ export type Database = {
           id?: string
           image?: string
           name?: string
+          part_number?: string
           price?: number
           updated_at?: string
+          vin?: string
         }
         Relationships: []
       }
