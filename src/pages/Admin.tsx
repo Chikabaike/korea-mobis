@@ -133,7 +133,7 @@ const PartsTab = () => {
               : <div className="w-16 h-16 rounded-lg bg-muted" />}
             <div className="flex-1 min-w-0">
               <div className="font-bold text-sm truncate">{p.name || '—'}</div>
-              <div className="text-xs text-muted-foreground">{p.category} · {p.price.toLocaleString('ru-RU')} сом</div>
+              <div className="text-xs text-muted-foreground">{p.category} · {p.price === -1 ? 'Договорная' : `${p.price.toLocaleString('ru-RU')} сом`}</div>
               <div className="flex gap-1 mt-1 flex-wrap">
                 {p.compatibility.map((f) => (
                   <span key={f} className="text-[9px] bg-muted px-1.5 py-0.5 rounded">{f}</span>
