@@ -1,9 +1,10 @@
-import { Search, MapPin, Clock, Phone, Wrench } from 'lucide-react';
+import { Search, MapPin, Clock, Phone, Wrench, Sun, Moon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
+import { useTheme } from '../context/ThemeContext';
 import hyundaiKiaLogo from '@/assets/hyundai-kia-logo.png';
 import whatsappIcon from '@/assets/whatsapp.png';
 import instagramIcon from '@/assets/instagram.png';
