@@ -101,6 +101,7 @@ const emptyPart = (categories: string[]): CarPart => ({
   compatibility: ['Бензин'],
   cars: [],
   partNumber: '',
+  partNumbers: [],
 });
 
 const PartsTab = () => {
@@ -207,8 +208,11 @@ const PartEditor = ({ part, categories, onSave, onCancel }: {
         <Field label="Название">
           <input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} className="input" />
         </Field>
-        <Field label="Номер запчасти">
-          <input value={draft.partNumber ?? ''} onChange={(e) => setDraft({ ...draft, partNumber: e.target.value })} placeholder="Напр. 28113-2P000" className="input" />
+        <Field label="Артикулы (номера запчасти)">
+          <PartNumbersEditor
+            value={draft.partNumbers && draft.partNumbers.length ? draft.partNumbers : (draft.partNumber ? [draft.partNumber] : [])}
+            onChange={(list) => setDraft({ ...draft, partNumbers: list, partNumber: list[0] ?? '' })}
+          />
         </Field>
         <Field label="Категория">
           <select value={draft.category} onChange={(e) => setDraft({ ...draft, category: e.target.value })} className="input">
