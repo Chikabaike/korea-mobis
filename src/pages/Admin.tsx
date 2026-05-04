@@ -7,6 +7,7 @@ import type { Session } from '@supabase/supabase-js';
 import type { BrandData, CarCompatibility, CarPart, FuelType, GenerationData, ModelData } from '@/types';
 import { toast } from 'sonner';
 import { addWatermark } from '@/lib/watermark';
+import { DEFAULT_WATERMARK, loadWatermarkSettings, saveWatermarkSettings, type WatermarkSettings } from '@/lib/watermarkSettings';
 
 const FUELS: FuelType[] = ['Бензин', 'Дизель', 'LPG/LPI', 'Hybrid'];
 
@@ -583,6 +584,94 @@ const SettingsTab = () => {
       <Field label="WhatsApp (без +)"><input value={draft.whatsapp} onChange={(e) => setDraft({ ...draft, whatsapp: e.target.value })} className="input" /></Field>
       <button onClick={handleSave} disabled={saving} className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50">
         {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Сохранить
+      </button>
+
+      <WatermarkSettingsBlock />
+    </div>
+  );
+};
+
+const WatermarkSettingsBlock = () => {
+  const [wm, setWm] = useState<WatermarkSettings>(DEFAULT_WATERMARK);
+  useEffect(() => { setWm(loadWatermarkSettings()); }, []);
+
+  const update = (patch: Partial<WatermarkSettings>) => {
+    const next = { ...wm, ...patch };
+    setWm(next);
+    saveWatermarkSettings(next);
+  };
+
+  return (
+    <div className="pt-6 mt-6 border-t border-border space-y-4">
+      <h2 className="text-lg font-black">Водяной знак для загрузок</h2>
+      <p className="text-xs text-muted-foreground">Применяется автоматически ко всем фото запчастей при загрузке.</p>
+
+      <label className="flex items-center justify-between bg-card border border-border rounded-lg px-4 py-3 cursor-pointer">
+        <span className="text-sm font-bold">Включить водяной знак</span>
+        <input
+          type="checkbox"
+          checked={wm.enabled}
+          onChange={(e) => update({ enabled: e.target.checked })}
+          className="w-5 h-5 accent-primary"
+        />
+      </label>
+
+      <Field label="Текст">
+        <input
+          value={wm.text}
+          onChange={(e) => update({ text: e.target.value })}
+          className="input"
+          disabled={!wm.enabled}
+        />
+      </Field>
+
+      <Field label={`Прозрачность: ${Math.round(wm.opacity * 100)}%`}>
+        <input
+          type="range" min={5} max={100} step={5}
+          value={Math.round(wm.opacity * 100)}
+          onChange={(e) => update({ opacity: Number(e.target.value) / 100 })}
+          disabled={!wm.enabled}
+          className="w-full"
+        />
+      </Field>
+
+      <Field label="Режим">
+        <div className="grid grid-cols-2 gap-2">
+          {(['diagonal', 'single'] as const).map((m) => (
+            <button
+              key={m}
+              type="button"
+              disabled={!wm.enabled}
+              onClick={() => update({ mode: m })}
+              className={`text-xs font-bold py-2 rounded border ${wm.mode === m ? 'bg-primary text-primary-foreground border-primary' : 'bg-card border-border'} disabled:opacity-50`}
+            >
+              {m === 'diagonal' ? 'Диагональный' : 'Одиночный'}
+            </button>
+          ))}
+        </div>
+      </Field>
+
+      <Field label="Положение">
+        <select
+          value={wm.position}
+          onChange={(e) => update({ position: e.target.value as WatermarkSettings['position'] })}
+          disabled={!wm.enabled}
+          className="input"
+        >
+          <option value="bottom-right">Снизу справа</option>
+          <option value="bottom-left">Снизу слева</option>
+          <option value="top-right">Сверху справа</option>
+          <option value="top-left">Сверху слева</option>
+          <option value="center">По центру</option>
+        </select>
+      </Field>
+
+      <button
+        type="button"
+        onClick={() => { saveWatermarkSettings(DEFAULT_WATERMARK); setWm(DEFAULT_WATERMARK); toast.success('Сброшено'); }}
+        className="text-xs text-muted-foreground hover:text-foreground underline"
+      >
+        Сбросить настройки
       </button>
     </div>
   );
