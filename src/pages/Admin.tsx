@@ -52,7 +52,7 @@ const Login = () => {
             <Lock size={20} className="text-primary" />
           </div>
           <h1 className="text-xl font-black text-foreground">Админ-панель</h1>
-          <p className="text-xs text-muted-foreground">{mode === 'login' ? 'Вход для владельца' : 'Создать аккаунт владельца'}</p>
+          <p className="text-xs text-muted-foreground">Вход для владельца</p>
         </div>
         <input
           type="email" autoFocus required value={email}
