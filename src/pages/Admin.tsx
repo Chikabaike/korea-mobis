@@ -856,6 +856,7 @@ const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }
             {tab === 'categories' && <CategoriesTab />}
             {tab === 'cars' && <CarsTab />}
             {tab === 'settings' && <SettingsTab />}
+            {tab === 'admins' && <AdminsTab />}
           </>
         )}
       </main>
