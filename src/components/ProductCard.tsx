@@ -38,8 +38,14 @@ const ProductCard = ({ part, onClick }: { part: CarPart; onClick: () => void }) 
         <div className="flex items-center justify-between gap-2 pt-2 border-t border-border">
           <div>
             <div className="text-base sm:text-lg font-black text-foreground leading-none">
-              {part.price.toLocaleString('ru-RU')}
-              <span className="text-[10px] sm:text-xs text-muted-foreground font-medium ml-1">сом</span>
+              {part.price === -1 ? (
+                'Договорная'
+              ) : (
+                <>
+                  {part.price.toLocaleString('ru-RU')}
+                  <span className="text-[10px] sm:text-xs text-muted-foreground font-medium ml-1">сом</span>
+                </>
+              )}
             </div>
           </div>
           <button
