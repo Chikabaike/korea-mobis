@@ -11,8 +11,9 @@ import instagramIcon from '@/assets/instagram.png';
 
 const Header = () => {
   const { filters, setSearchQuery } = useFilter();
-  const { t } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const { settings } = useStore();
+  const { theme, toggleTheme } = useTheme();
   const address = settings.addressRu;
   const workHours = settings.workHoursRu;
   const navigate = useNavigate();
