@@ -48,13 +48,15 @@ const AppContent = () => {
 };
 
 const Index = () => (
-  <StoreProvider>
-    <LanguageProvider>
-      <FilterProvider>
-        <AppContent />
-      </FilterProvider>
-    </LanguageProvider>
-  </StoreProvider>
+  <ThemeProvider>
+    <StoreProvider>
+      <LanguageProvider>
+        <FilterProvider>
+          <AppContent />
+        </FilterProvider>
+      </LanguageProvider>
+    </StoreProvider>
+  </ThemeProvider>
 );
 
 export default Index;
