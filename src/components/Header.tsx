@@ -24,8 +24,12 @@ const Header = () => {
     clickCountRef.current += 1;
     if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
     clickTimerRef.current = setTimeout(() => {
+      const count = clickCountRef.current;
       clickCountRef.current = 0;
-    }, 1500);
+      if (count < 5) {
+        window.location.href = '/';
+      }
+    }, 400);
     if (clickCountRef.current >= 5) {
       clickCountRef.current = 0;
       if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
