@@ -1,4 +1,3 @@
-import { ShoppingCart } from 'lucide-react';
 import type { CarPart, FuelType } from '../types';
 
 const fuelColor: Record<FuelType, string> = {
@@ -66,16 +65,6 @@ const ProductCard = ({ part, onClick }: { part: CarPart; onClick: () => void }) 
               )}
             </div>
           </div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick();
-            }}
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shrink-0"
-            aria-label="Подробнее"
-          >
-            <ShoppingCart size={15} />
-          </button>
         </div>
       </div>
     </article>
