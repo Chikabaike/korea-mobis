@@ -20,6 +20,7 @@ const ProductCard = ({ part, onClick }: { part: CarPart; onClick: () => void }) 
           src={part.image}
           alt={part.name}
           loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute top-3 left-3 text-[9px] font-bold uppercase tracking-widest bg-card/95 backdrop-blur px-2.5 py-1 rounded-full text-foreground">
