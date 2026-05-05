@@ -109,14 +109,13 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
               <MapPin size={16} className="text-primary" />
-              <span>г. Бишкек, с. Новопавловка, ул. Фрунзе 355</span>
               <a
-                href="https://yandex.com/maps/?text=%D0%B3.%20%D0%91%D0%B8%D1%88%D0%BA%D0%B5%D0%BA%2C%20%D1%81.%20%D0%9D%D0%BE%D0%B2%D0%BE%D0%BF%D0%B0%D0%B2%D0%BB%D0%BE%D0%B2%D0%BA%D0%B0%2C%20%D1%83%D0%BB.%20%D0%A4%D1%80%D1%83%D0%BD%D0%B7%D0%B5%20355"
+                href="https://2gis.kg/bishkek/search/г.Бишкек%2C%20с.%20Новопавловка%20ул.%20Фрунзе%20355"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-semibold text-primary hover:underline"
+                className="hover:text-primary hover:underline"
               >
-                На карте
+                г. Бишкек, с. Новопавловка, ул. Фрунзе 355
               </a>
             </div>
           </div>
