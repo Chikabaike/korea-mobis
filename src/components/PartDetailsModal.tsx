@@ -1,4 +1,4 @@
-import { X, MessageCircle, ShieldCheck, Truck } from 'lucide-react';
+import { X, MessageCircle, Phone, MapPin } from 'lucide-react';
 import type { CarPart } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
@@ -91,14 +91,14 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-3 py-3 border-y border-border">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 py-3 border-y border-border">
+            <a href="tel:+996508304444" className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors">
+              <Phone size={16} className="text-primary" />
+              +996 508 304 444
+            </a>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <ShieldCheck size={16} className="text-primary" />
-              Гарантия 12 мес
-            </div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Truck size={16} className="text-primary" />
-              Доставка по КР
+              <MapPin size={16} className="text-primary" />
+              г. Бишкек, с. Новопавловка, ул. Фрунзе 355
             </div>
           </div>
 
