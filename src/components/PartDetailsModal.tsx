@@ -92,13 +92,32 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 py-3 border-y border-border">
-            <a href="tel:+996508304444" className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors">
-              <Phone size={16} className="text-primary" />
-              +996 508 304 444
-            </a>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <a href="tel:+996508304444" className="flex items-center gap-2 hover:text-primary transition-colors">
+                <Phone size={16} className="text-primary" />
+                +996 508 304 444
+              </a>
+              <a
+                href="https://wa.me/996508304444"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+                className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#25D366] text-white hover:opacity-90 transition-opacity"
+              >
+                <MessageCircle size={14} />
+              </a>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
               <MapPin size={16} className="text-primary" />
-              г. Бишкек, с. Новопавловка, ул. Фрунзе 355
+              <span>г. Бишкек, с. Новопавловка, ул. Фрунзе 355</span>
+              <a
+                href="https://yandex.com/maps/?text=%D0%B3.%20%D0%91%D0%B8%D1%88%D0%BA%D0%B5%D0%BA%2C%20%D1%81.%20%D0%9D%D0%BE%D0%B2%D0%BE%D0%BF%D0%B0%D0%B2%D0%BB%D0%BE%D0%B2%D0%BA%D0%B0%2C%20%D1%83%D0%BB.%20%D0%A4%D1%80%D1%83%D0%BD%D0%B7%D0%B5%20355"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-primary hover:underline"
+              >
+                На карте
+              </a>
             </div>
           </div>
 
