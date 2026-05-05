@@ -4,6 +4,7 @@ import PromoBanner from '@/components/PromoBanner';
 import FilterWidget from '@/components/FilterWidget';
 import Catalog from '@/components/Catalog';
 import LatestPartsSection from '@/components/LatestPartsSection';
+import StoreMap from '@/components/StoreMap';
 import { FilterProvider } from '@/context/FilterContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { StoreProvider } from '@/context/StoreContext';
@@ -37,6 +38,8 @@ const AppContent = () => {
           )}
 
           <Catalog />
+
+          <StoreMap />
         </div>
       </main>
 
