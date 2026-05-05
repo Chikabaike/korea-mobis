@@ -42,43 +42,6 @@ const Header = () => {
             <div className="flex flex-col gap-0.5 min-w-0">
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-wrap">
                 <a
-                  href="https://yandex.com/maps/10309/bishkek/?ll=74.521744%2C42.881923&mode=poi&poi%5Bpoint%5D=74.521482%2C42.881651&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D129445298918&z=19.56"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors min-w-0"
-                >
-                  <MapPin size={13} className="text-primary shrink-0" />
-                  <span className="truncate">г.Бишкек, рынок Кудайберген Ряд 18, 33-34 контейнер</span>
-                </a>
-                <div className="flex items-center gap-2 shrink-0 ml-1">
-                  <a
-                    href="tel:+996500160399"
-                    className="font-semibold text-foreground hover:text-primary transition-colors"
-                  >
-                    +996 500 160 399
-                  </a>
-                  <a
-                    href="https://wa.me/996500160399"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="WhatsApp"
-                    className="shrink-0 hover:opacity-80 transition-opacity"
-                  >
-                    <img src={whatsappIcon} alt="WhatsApp" className="w-5 h-5 object-cover rounded-[22%]" />
-                  </a>
-                  <a
-                    href="https://www.instagram.com/koreamobis_4444/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Instagram"
-                    className="shrink-0 hover:opacity-80 transition-opacity"
-                  >
-                    <img src={instagramIcon} alt="Instagram" className="w-5 h-5 object-cover rounded-[22%]" />
-                  </a>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-wrap">
-                <a
                   href="https://yandex.com/maps/?text=%D0%B3.%D0%91%D0%B8%D1%88%D0%BA%D0%B5%D0%BA%2C%20%D1%81.%20%D0%9D%D0%BE%D0%B2%D0%BE%D0%BF%D0%B0%D0%B2%D0%BB%D0%BE%D0%B2%D0%BA%D0%B0%2C%20%D1%83%D0%BB.%20%D0%A4%D1%80%D1%83%D0%BD%D0%B7%D0%B5%20355"
                   target="_blank"
                   rel="noopener noreferrer"
