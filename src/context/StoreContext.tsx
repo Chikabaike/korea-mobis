@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
+import { createContext, useContext, useEffect, ReactNode } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import type { BrandData, CarPart } from '../types';
 
@@ -46,13 +47,20 @@ const mapBrand = (r: DbBrand): BrandData => ({
   models: (r.models as BrandData['models']) ?? [],
 });
 
+// Query keys
+const QK = {
+  parts: ['parts'] as const,
+  brands: ['brands'] as const,
+  categories: ['categories'] as const,
+  settings: ['site_settings'] as const,
+};
+
 interface StoreCtx {
   parts: CarPart[];
   brands: BrandData[];
   categories: string[];
   settings: SiteSettings;
   loading: boolean;
-  // mutations
   upsertPart: (p: CarPart) => Promise<void>;
   deletePart: (id: string) => Promise<void>;
   setCategoriesList: (c: string[]) => Promise<void>;
@@ -66,47 +74,77 @@ interface StoreCtx {
 const StoreContext = createContext<StoreCtx | null>(null);
 
 export const StoreProvider = ({ children }: { children: ReactNode }) => {
-  const [parts, setParts] = useState<CarPart[]>([]);
-  const [brands, setBrands] = useState<BrandData[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [settings, setSettings] = useState<SiteSettings>(DEFAULT_SETTINGS);
-  const [loading, setLoading] = useState(true);
+  const qc = useQueryClient();
 
-  const reload = useCallback(async () => {
-    const [pRes, bRes, cRes, sRes] = await Promise.all([
-      supabase.from('parts').select('*').order('created_at', { ascending: false }),
-      supabase.from('brands').select('*').order('position', { ascending: true }),
-      supabase.from('categories').select('*').order('position', { ascending: true }),
-      supabase.from('site_settings').select('*').eq('id', 1).maybeSingle(),
+  const partsQ = useQuery({
+    queryKey: QK.parts,
+    queryFn: async () => {
+      const { data, error } = await supabase.from('parts').select('*').order('created_at', { ascending: false });
+      if (error) throw error;
+      return (data ?? []).map((r) => mapPart(r as unknown as DbPart));
+    },
+  });
+
+  const brandsQ = useQuery({
+    queryKey: QK.brands,
+    queryFn: async () => {
+      const { data, error } = await supabase.from('brands').select('*').order('position', { ascending: true });
+      if (error) throw error;
+      return (data ?? []).map((r) => mapBrand(r as unknown as DbBrand));
+    },
+  });
+
+  const categoriesQ = useQuery({
+    queryKey: QK.categories,
+    queryFn: async () => {
+      const { data, error } = await supabase.from('categories').select('*').order('position', { ascending: true });
+      if (error) throw error;
+      return (data ?? []).map((r) => r.name as string);
+    },
+  });
+
+  const settingsQ = useQuery({
+    queryKey: QK.settings,
+    queryFn: async () => {
+      const { data, error } = await supabase.from('site_settings').select('*').eq('id', 1).maybeSingle();
+      if (error) throw error;
+      if (!data) return DEFAULT_SETTINGS;
+      return {
+        promoRu: data.promo_ru, promoKg: data.promo_kg,
+        addressRu: data.address_ru, addressKg: data.address_kg,
+        workHoursRu: data.work_hours_ru, workHoursKg: data.work_hours_kg,
+        phone: data.phone, whatsapp: data.whatsapp,
+      } as SiteSettings;
+    },
+  });
+
+  const parts = partsQ.data ?? [];
+  const brands = brandsQ.data ?? [];
+  const categories = categoriesQ.data ?? [];
+  const settings = settingsQ.data ?? DEFAULT_SETTINGS;
+  const loading =
+    partsQ.isLoading || brandsQ.isLoading || categoriesQ.isLoading || settingsQ.isLoading;
+
+  const reload = async () => {
+    await Promise.all([
+      qc.invalidateQueries({ queryKey: QK.parts }),
+      qc.invalidateQueries({ queryKey: QK.brands }),
+      qc.invalidateQueries({ queryKey: QK.categories }),
+      qc.invalidateQueries({ queryKey: QK.settings }),
     ]);
-    if (pRes.data) setParts(pRes.data.map((r) => mapPart(r as unknown as DbPart)));
-    if (bRes.data) setBrands(bRes.data.map((r) => mapBrand(r as unknown as DbBrand)));
-    if (cRes.data) setCategories(cRes.data.map((r) => r.name as string));
-    if (sRes.data) {
-      const s = sRes.data;
-      setSettings({
-        promoRu: s.promo_ru, promoKg: s.promo_kg,
-        addressRu: s.address_ru, addressKg: s.address_kg,
-        workHoursRu: s.work_hours_ru, workHoursKg: s.work_hours_kg,
-        phone: s.phone, whatsapp: s.whatsapp,
-      });
-    }
-    setLoading(false);
-  }, []);
+  };
 
-  useEffect(() => { reload(); }, [reload]);
-
-  // Realtime sync — any admin edit appears for everyone instantly
+  // Realtime sync — invalidate the relevant query
   useEffect(() => {
     const channel = supabase
       .channel('store-sync')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'parts' }, () => reload())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'brands' }, () => reload())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, () => reload())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'site_settings' }, () => reload())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'parts' }, () => qc.invalidateQueries({ queryKey: QK.parts }))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'brands' }, () => qc.invalidateQueries({ queryKey: QK.brands }))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, () => qc.invalidateQueries({ queryKey: QK.categories }))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'site_settings' }, () => qc.invalidateQueries({ queryKey: QK.settings }))
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [reload]);
+  }, [qc]);
 
   const upsertPart = async (p: CarPart) => {
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(p.id);
@@ -125,17 +163,16 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       const { error } = await supabase.from('parts').insert(payload);
       if (error) throw error;
     }
-    await reload();
+    await qc.invalidateQueries({ queryKey: QK.parts });
   };
 
   const deletePart = async (id: string) => {
     const { error } = await supabase.from('parts').delete().eq('id', id);
     if (error) throw error;
-    await reload();
+    await qc.invalidateQueries({ queryKey: QK.parts });
   };
 
   const setCategoriesList = async (next: string[]) => {
-    // Replace strategy: delete removed, insert new
     const current = new Set(categories);
     const desired = new Set(next);
     const toDelete = [...current].filter((c) => !desired.has(c));
@@ -148,7 +185,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
         toInsert.map((name, i) => ({ name, position: current.size + i + 1 }))
       );
     }
-    await reload();
+    await qc.invalidateQueries({ queryKey: QK.categories });
   };
 
   const renameCategory = async (oldName: string, newName: string) => {
@@ -157,10 +194,12 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     if (categories.includes(v)) throw new Error('Категория с таким именем уже существует');
     const { error: cErr } = await supabase.from('categories').update({ name: v }).eq('name', oldName);
     if (cErr) throw cErr;
-    // Update referencing parts
     const { error: pErr } = await supabase.from('parts').update({ category: v }).eq('category', oldName);
     if (pErr) throw pErr;
-    await reload();
+    await Promise.all([
+      qc.invalidateQueries({ queryKey: QK.categories }),
+      qc.invalidateQueries({ queryKey: QK.parts }),
+    ]);
   };
 
   const setBrandsList = async (next: BrandData[]) => {
@@ -170,7 +209,6 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     if (toDelete.length) {
       await supabase.from('brands').delete().in('name', toDelete);
     }
-    // Upsert each desired brand (update models JSON or insert new)
     for (let i = 0; i < next.length; i++) {
       const b = next[i];
       await supabase
@@ -180,7 +218,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
           { onConflict: 'name' }
         );
     }
-    await reload();
+    await qc.invalidateQueries({ queryKey: QK.brands });
   };
 
   const saveSettings = async (s: SiteSettings) => {
@@ -191,7 +229,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       phone: s.phone, whatsapp: s.whatsapp,
     }).eq('id', 1);
     if (error) throw error;
-    await reload();
+    await qc.invalidateQueries({ queryKey: QK.settings });
   };
 
   const uploadImage = async (file: File): Promise<string> => {
