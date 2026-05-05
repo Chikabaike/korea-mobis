@@ -52,7 +52,7 @@ const StoreMap = () => {
       <div className="relative w-full aspect-[16/8] bg-muted">
         <iframe
           title="Карта магазина KOREA-MOBIS"
-          src="https://yandex.com/map-widget/v1/?ll=74.516%2C42.890&z=15&pt=74.516,42.890,pm2rdm&l=map"
+          src="https://yandex.com/map-widget/v1/?ll=74.466156%2C42.874413&z=18&pt=74.466156,42.874413,pm2rdm&l=map"
           loading="lazy"
           className="absolute inset-0 w-full h-full border-0"
           allowFullScreen
