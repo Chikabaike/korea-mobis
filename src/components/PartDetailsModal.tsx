@@ -1,4 +1,4 @@
-import { X, MessageCircle, ShieldCheck, Truck } from 'lucide-react';
+import { X, MessageCircle, Phone, MapPin } from 'lucide-react';
 import type { CarPart } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
