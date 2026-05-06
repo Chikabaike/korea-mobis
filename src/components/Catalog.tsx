@@ -54,7 +54,7 @@ const Catalog = () => {
           <p className="text-sm text-muted-foreground">{t.noPartsDesc}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
           {filtered.map((p) => (
             <ProductCard key={p.id} part={p} onClick={() => setSelected(p)} />
           ))}
