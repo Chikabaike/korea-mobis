@@ -11,6 +11,11 @@ const LatestPartsSection = ({ onClose }: { onClose: () => void }) => {
   const { parts, categories } = useStore();
   const [selectedCats, setSelectedCats] = useState<string[]>([]);
   const [selected, setSelected] = useState<CarPart | null>(null);
+  const PAGE = 24;
+  const [limit, setLimit] = useState(PAGE);
+
+  // reset pagination when filters change
+  useEffect(() => { setLimit(PAGE); }, [filters, selectedCats]);
 
   const carFiltered = useMemo(() => {
     return parts
