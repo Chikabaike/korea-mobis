@@ -168,11 +168,23 @@ const LatestPartsSection = ({ onClose }: { onClose: () => void }) => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-              {visible.map((p) => (
-                <ProductCard key={p.id} part={p} onClick={() => setSelected(p)} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
+                {visible.map((p) => (
+                  <ProductCard key={p.id} part={p} onClick={() => setSelected(p)} />
+                ))}
+              </div>
+              {canShowMore && (
+                <div className="flex justify-center mt-6">
+                  <button
+                    onClick={() => setLimit((l) => l + PAGE)}
+                    className="text-xs font-black uppercase tracking-[0.2em] px-6 py-3 rounded-lg border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+                  >
+                    Показать ещё
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
