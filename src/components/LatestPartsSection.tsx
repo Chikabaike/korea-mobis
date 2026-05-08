@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useFilter } from '../context/FilterContext';
 import { useStore } from '../context/StoreContext';
 import ProductCard from './ProductCard';
@@ -11,6 +11,11 @@ const LatestPartsSection = ({ onClose }: { onClose: () => void }) => {
   const { parts, categories } = useStore();
   const [selectedCats, setSelectedCats] = useState<string[]>([]);
   const [selected, setSelected] = useState<CarPart | null>(null);
+  const PAGE = 24;
+  const [limit, setLimit] = useState(PAGE);
+
+  // reset pagination when filters change
+  useEffect(() => { setLimit(PAGE); }, [filters, selectedCats]);
 
   const carFiltered = useMemo(() => {
     return parts
@@ -27,14 +32,32 @@ const LatestPartsSection = ({ onClose }: { onClose: () => void }) => {
         }
         return true;
       })
-      .slice(0, 24);
-  }, [parts, filters]);
+      .slice(0, limit);
+  }, [parts, filters, limit]);
 
   const visible = useMemo(() => {
     return selectedCats.length === 0
       ? carFiltered
       : carFiltered.filter((p) => selectedCats.includes(p.category));
   }, [carFiltered, selectedCats]);
+
+  const totalAvailable = useMemo(() => {
+    return parts.filter((p) => {
+      if (filters.fuel && !p.compatibility.includes(filters.fuel)) return false;
+      if (filters.brand && p.cars && p.cars.length > 0) {
+        const ok = p.cars.some((c) => {
+          if (c.brand !== filters.brand) return false;
+          if (filters.model && c.model !== filters.model) return false;
+          if (filters.generation && c.generation && c.generation !== filters.generation) return false;
+          return true;
+        });
+        if (!ok) return false;
+      }
+      return true;
+    }).length;
+  }, [parts, filters]);
+
+  const canShowMore = carFiltered.length < totalAvailable;
 
   // counts per category (within current car selection)
   const counts = useMemo(() => {
@@ -145,11 +168,23 @@ const LatestPartsSection = ({ onClose }: { onClose: () => void }) => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-              {visible.map((p) => (
-                <ProductCard key={p.id} part={p} onClick={() => setSelected(p)} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
+                {visible.map((p) => (
+                  <ProductCard key={p.id} part={p} onClick={() => setSelected(p)} />
+                ))}
+              </div>
+              {canShowMore && (
+                <div className="flex justify-center mt-6">
+                  <button
+                    onClick={() => setLimit((l) => l + PAGE)}
+                    className="text-xs font-black uppercase tracking-[0.2em] px-6 py-3 rounded-lg border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+                  >
+                    Показать ещё
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
