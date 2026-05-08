@@ -32,14 +32,32 @@ const LatestPartsSection = ({ onClose }: { onClose: () => void }) => {
         }
         return true;
       })
-      .slice(0, 24);
-  }, [parts, filters]);
+      .slice(0, limit);
+  }, [parts, filters, limit]);
 
   const visible = useMemo(() => {
     return selectedCats.length === 0
       ? carFiltered
       : carFiltered.filter((p) => selectedCats.includes(p.category));
   }, [carFiltered, selectedCats]);
+
+  const totalAvailable = useMemo(() => {
+    return parts.filter((p) => {
+      if (filters.fuel && !p.compatibility.includes(filters.fuel)) return false;
+      if (filters.brand && p.cars && p.cars.length > 0) {
+        const ok = p.cars.some((c) => {
+          if (c.brand !== filters.brand) return false;
+          if (filters.model && c.model !== filters.model) return false;
+          if (filters.generation && c.generation && c.generation !== filters.generation) return false;
+          return true;
+        });
+        if (!ok) return false;
+      }
+      return true;
+    }).length;
+  }, [parts, filters]);
+
+  const canShowMore = carFiltered.length < totalAvailable;
 
   // counts per category (within current car selection)
   const counts = useMemo(() => {
