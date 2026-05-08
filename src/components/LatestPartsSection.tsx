@@ -30,8 +30,10 @@ const LatestPartsSection = ({ onClose }: { onClose: () => void }) => {
   }, [parts, filters]);
 
   const visible = useMemo(() => {
-    if (selectedCats.length === 0) return carFiltered;
-    return carFiltered.filter((p) => selectedCats.includes(p.category));
+    const list = selectedCats.length === 0
+      ? carFiltered
+      : carFiltered.filter((p) => selectedCats.includes(p.category));
+    return list.slice(0, 24);
   }, [carFiltered, selectedCats]);
 
   // counts per category (within current car selection)
