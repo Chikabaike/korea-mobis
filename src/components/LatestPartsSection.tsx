@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useFilter } from '../context/FilterContext';
 import { useStore } from '../context/StoreContext';
 import ProductCard from './ProductCard';
