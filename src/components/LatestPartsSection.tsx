@@ -26,14 +26,14 @@ const LatestPartsSection = ({ onClose }: { onClose: () => void }) => {
           if (!ok) return false;
         }
         return true;
-      });
+      })
+      .slice(0, 24);
   }, [parts, filters]);
 
   const visible = useMemo(() => {
-    const list = selectedCats.length === 0
+    return selectedCats.length === 0
       ? carFiltered
       : carFiltered.filter((p) => selectedCats.includes(p.category));
-    return list.slice(0, 24);
   }, [carFiltered, selectedCats]);
 
   // counts per category (within current car selection)
