@@ -425,6 +425,7 @@ const Field = ({ label, children }: { label: string; children: React.ReactNode }
 const CategoriesTab = () => {
   const { categories, setCategoriesList, renameCategory, parts } = useStore();
   const [name, setName] = useState('');
+  const [query, setQuery] = useState('');
 
   const add = async () => {
     const v = name.trim();
@@ -447,15 +448,33 @@ const CategoriesTab = () => {
     catch (e) { toast.error(e instanceof Error ? e.message : 'Ошибка'); }
   };
 
+  const filtered = categories.filter((c) => c.toLowerCase().includes(query.trim().toLowerCase()));
+
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-black">Категории ({categories.length})</h2>
+      <h2 className="text-lg font-black">Категории ({filtered.length}{query && filtered.length !== categories.length ? ` / ${categories.length}` : ''})</h2>
       <div className="flex gap-2">
         <input value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && add()} placeholder="Новая категория" className="input flex-1" />
         <button onClick={add} className="bg-primary text-primary-foreground px-4 rounded-lg font-bold text-sm flex items-center gap-1.5"><Plus size={14} /> Добавить</button>
       </div>
+      <div className="relative">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Поиск по категории..."
+          className="input w-full pl-9"
+        />
+        {query && (
+          <button onClick={() => setQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1" aria-label="Очистить">
+            <X size={14} />
+          </button>
+        )}
+      </div>
       <div className="grid gap-2">
-        {categories.map((c) => (
+        {filtered.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-8">Ничего не найдено</p>
+        ) : filtered.map((c) => (
           <div key={c} className="flex items-center justify-between bg-card border border-border rounded-lg px-4 py-3">
             <span className="font-medium text-sm">{c}</span>
             <div className="flex items-center gap-1">
