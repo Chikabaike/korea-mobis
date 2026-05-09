@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Lock, LogOut, Plus, Trash2, Save, ArrowLeft, Pencil, X, Loader2, Settings } from 'lucide-react';
+import { Lock, LogOut, Plus, Trash2, Save, ArrowLeft, Pencil, X, Loader2, Settings, Search } from 'lucide-react';
 import { StoreProvider, useStore } from '@/context/StoreContext';
 import { supabase } from '@/integrations/supabase/client';
 import type { Session } from '@supabase/supabase-js';
@@ -100,6 +100,7 @@ const emptyPart = (categories: string[]): CarPart => ({
 const PartsTab = () => {
   const { parts, categories, upsertPart, deletePart } = useStore();
   const [editing, setEditing] = useState<CarPart | null>(null);
+  const [query, setQuery] = useState('');
 
   const save = async (p: CarPart) => {
     try { await upsertPart(p); setEditing(null); toast.success('Сохранено'); }
@@ -112,17 +113,47 @@ const PartsTab = () => {
     catch (e) { toast.error(e instanceof Error ? e.message : 'Ошибка'); }
   };
 
+  const filtered = parts.filter((p) => {
+    const q = query.trim().toLowerCase();
+    if (!q) return true;
+    const hay = [
+      p.name,
+      p.category,
+      p.partNumber ?? '',
+      ...(p.partNumbers ?? []),
+      ...(p.cars ?? []).flatMap((c) => [c.brand, c.model, c.generation ?? '']),
+    ].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-black">Запчасти ({parts.length})</h2>
+      <div className="flex justify-between items-center gap-3 flex-wrap">
+        <h2 className="text-lg font-black">Запчасти ({filtered.length}{query && filtered.length !== parts.length ? ` / ${parts.length}` : ''})</h2>
         <button onClick={() => setEditing(emptyPart(categories))} className="flex items-center gap-1.5 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-bold">
           <Plus size={14} /> Добавить
         </button>
       </div>
 
+      <div className="relative">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Поиск по названию, артикулу, категории, авто..."
+          className="input w-full pl-9"
+        />
+        {query && (
+          <button onClick={() => setQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1" aria-label="Очистить">
+            <X size={14} />
+          </button>
+        )}
+      </div>
+
       <div className="grid gap-3">
-        {parts.map((p) => (
+        {filtered.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-8">Ничего не найдено</p>
+        ) : filtered.map((p) => (
           <div key={p.id} className="bg-card border border-border rounded-xl p-3 flex items-center gap-3">
             {p.image
               ? <img src={p.image} alt={p.name} className="w-16 h-16 rounded-lg object-cover bg-muted" />
@@ -394,6 +425,7 @@ const Field = ({ label, children }: { label: string; children: React.ReactNode }
 const CategoriesTab = () => {
   const { categories, setCategoriesList, renameCategory, parts } = useStore();
   const [name, setName] = useState('');
+  const [query, setQuery] = useState('');
 
   const add = async () => {
     const v = name.trim();
@@ -416,15 +448,33 @@ const CategoriesTab = () => {
     catch (e) { toast.error(e instanceof Error ? e.message : 'Ошибка'); }
   };
 
+  const filtered = categories.filter((c) => c.toLowerCase().includes(query.trim().toLowerCase()));
+
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-black">Категории ({categories.length})</h2>
+      <h2 className="text-lg font-black">Категории ({filtered.length}{query && filtered.length !== categories.length ? ` / ${categories.length}` : ''})</h2>
       <div className="flex gap-2">
         <input value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && add()} placeholder="Новая категория" className="input flex-1" />
         <button onClick={add} className="bg-primary text-primary-foreground px-4 rounded-lg font-bold text-sm flex items-center gap-1.5"><Plus size={14} /> Добавить</button>
       </div>
+      <div className="relative">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Поиск по категории..."
+          className="input w-full pl-9"
+        />
+        {query && (
+          <button onClick={() => setQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1" aria-label="Очистить">
+            <X size={14} />
+          </button>
+        )}
+      </div>
       <div className="grid gap-2">
-        {categories.map((c) => (
+        {filtered.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-8">Ничего не найдено</p>
+        ) : filtered.map((c) => (
           <div key={c} className="flex items-center justify-between bg-card border border-border rounded-lg px-4 py-3">
             <span className="font-medium text-sm">{c}</span>
             <div className="flex items-center gap-1">
@@ -443,6 +493,7 @@ const CategoriesTab = () => {
 const CarsTab = () => {
   const { brands, setBrandsList } = useStore();
   const [newBrand, setNewBrand] = useState('');
+  const [query, setQuery] = useState('');
 
   const update = async (next: BrandData[]) => {
     try { await setBrandsList(next); }
@@ -491,6 +542,17 @@ const CarsTab = () => {
   const updateModel = (brandName: string, modelName: string, fn: (m: ModelData) => ModelData) =>
     update(brands.map((b) => b.name === brandName ? { ...b, models: b.models.map((m) => m.name === modelName ? fn(m) : m) } : b));
 
+  const q = query.trim().toLowerCase();
+  const filteredBrands = q
+    ? brands.filter((b) => {
+        if (b.name.toLowerCase().includes(q)) return true;
+        return b.models.some((m) =>
+          m.name.toLowerCase().includes(q) ||
+          m.generations.some((g) => g.generationName.toLowerCase().includes(q))
+        );
+      })
+    : brands;
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-black">Авто: марки → модели → поколения</h2>
@@ -499,8 +561,25 @@ const CarsTab = () => {
         <button onClick={addBrand} className="bg-primary text-primary-foreground px-4 rounded-lg font-bold text-sm flex items-center gap-1.5"><Plus size={14} /> Марка</button>
       </div>
 
+      <div className="relative">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Поиск по марке, модели или поколению..."
+          className="input w-full pl-9"
+        />
+        {query && (
+          <button onClick={() => setQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1" aria-label="Очистить">
+            <X size={14} />
+          </button>
+        )}
+      </div>
+
       <div className="space-y-3">
-        {brands.map((b) => (
+        {filteredBrands.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-8">Ничего не найдено</p>
+        ) : filteredBrands.map((b) => (
           <BrandBlock
             key={b.name}
             brand={b}
