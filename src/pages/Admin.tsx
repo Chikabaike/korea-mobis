@@ -493,6 +493,7 @@ const CategoriesTab = () => {
 const CarsTab = () => {
   const { brands, setBrandsList } = useStore();
   const [newBrand, setNewBrand] = useState('');
+  const [query, setQuery] = useState('');
 
   const update = async (next: BrandData[]) => {
     try { await setBrandsList(next); }
@@ -541,6 +542,17 @@ const CarsTab = () => {
   const updateModel = (brandName: string, modelName: string, fn: (m: ModelData) => ModelData) =>
     update(brands.map((b) => b.name === brandName ? { ...b, models: b.models.map((m) => m.name === modelName ? fn(m) : m) } : b));
 
+  const q = query.trim().toLowerCase();
+  const filteredBrands = q
+    ? brands.filter((b) => {
+        if (b.name.toLowerCase().includes(q)) return true;
+        return b.models.some((m) =>
+          m.name.toLowerCase().includes(q) ||
+          m.generations.some((g) => g.generationName.toLowerCase().includes(q))
+        );
+      })
+    : brands;
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-black">Авто: марки → модели → поколения</h2>
@@ -549,8 +561,25 @@ const CarsTab = () => {
         <button onClick={addBrand} className="bg-primary text-primary-foreground px-4 rounded-lg font-bold text-sm flex items-center gap-1.5"><Plus size={14} /> Марка</button>
       </div>
 
+      <div className="relative">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Поиск по марке, модели или поколению..."
+          className="input w-full pl-9"
+        />
+        {query && (
+          <button onClick={() => setQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1" aria-label="Очистить">
+            <X size={14} />
+          </button>
+        )}
+      </div>
+
       <div className="space-y-3">
-        {brands.map((b) => (
+        {filteredBrands.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-8">Ничего не найдено</p>
+        ) : filteredBrands.map((b) => (
           <BrandBlock
             key={b.name}
             brand={b}
