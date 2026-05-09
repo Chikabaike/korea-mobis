@@ -838,8 +838,26 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
   const load = async () => {
     setLoading(true); setError('');
     try {
-      const { data, error } = await supabase.functions.invoke('list-admin-emails');
-      if (error) throw error;
+      // Ensure we have a fresh, valid session before calling the admin function
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData?.session?.access_token;
+      if (!token) {
+        await supabase.auth.signOut();
+        setError('Сессия истекла. Войдите заново.');
+        return;
+      }
+      const { data, error } = await supabase.functions.invoke('list-admin-emails', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (error) {
+        const msg = error instanceof Error ? error.message : String(error);
+        if (msg.includes('401') || /unauthor/i.test(msg)) {
+          await supabase.auth.signOut();
+          setError('Сессия истекла. Войдите заново.');
+          return;
+        }
+        throw error;
+      }
       setUsers((data as { users: AdminUser[] }).users ?? []);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Ошибка загрузки');
