@@ -974,7 +974,7 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
                   <tr key={u.id} className="border-t border-border">
                     <td className="px-4 py-3 font-semibold">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span>{u.email || '—'}</span>
+                        <span>{emailToLogin(u.email) || '—'}</span>
                         {isThisSuper && (
                           <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-primary text-primary-foreground">
                             Главный
