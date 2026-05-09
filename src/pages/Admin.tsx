@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Lock, LogOut, Plus, Trash2, Save, ArrowLeft, Pencil, X, Loader2, Settings } from 'lucide-react';
+import { Lock, LogOut, Plus, Trash2, Save, ArrowLeft, Pencil, X, Loader2, Settings, Search } from 'lucide-react';
 import { StoreProvider, useStore } from '@/context/StoreContext';
 import { supabase } from '@/integrations/supabase/client';
 import type { Session } from '@supabase/supabase-js';
