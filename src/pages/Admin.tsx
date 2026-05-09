@@ -13,6 +13,18 @@ const FUELS: FuelType[] = ['Бензин', 'Дизель', 'LPG/LPI', 'Hybrid'];
 
 /* ============================ AUTH ============================ */
 
+const LOGIN_DOMAIN = 'admin.local';
+const loginToEmail = (v: string) => {
+  const s = v.trim();
+  if (!s) return '';
+  return s.includes('@') ? s.toLowerCase() : `${s.toLowerCase()}@${LOGIN_DOMAIN}`;
+};
+const emailToLogin = (e: string) => {
+  if (!e) return '';
+  return e.endsWith(`@${LOGIN_DOMAIN}`) ? e.slice(0, -(LOGIN_DOMAIN.length + 1)) : e;
+};
+
+
 const Login = () => {
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [email, setEmail] = useState('');
