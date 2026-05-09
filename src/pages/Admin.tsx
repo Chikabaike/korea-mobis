@@ -100,6 +100,7 @@ const emptyPart = (categories: string[]): CarPart => ({
 const PartsTab = () => {
   const { parts, categories, upsertPart, deletePart } = useStore();
   const [editing, setEditing] = useState<CarPart | null>(null);
+  const [query, setQuery] = useState('');
 
   const save = async (p: CarPart) => {
     try { await upsertPart(p); setEditing(null); toast.success('Сохранено'); }
@@ -112,17 +113,47 @@ const PartsTab = () => {
     catch (e) { toast.error(e instanceof Error ? e.message : 'Ошибка'); }
   };
 
+  const filtered = parts.filter((p) => {
+    const q = query.trim().toLowerCase();
+    if (!q) return true;
+    const hay = [
+      p.name,
+      p.category,
+      p.partNumber ?? '',
+      ...(p.partNumbers ?? []),
+      ...(p.cars ?? []).flatMap((c) => [c.brand, c.model, c.generation ?? '']),
+    ].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-black">Запчасти ({parts.length})</h2>
+      <div className="flex justify-between items-center gap-3 flex-wrap">
+        <h2 className="text-lg font-black">Запчасти ({filtered.length}{query && filtered.length !== parts.length ? ` / ${parts.length}` : ''})</h2>
         <button onClick={() => setEditing(emptyPart(categories))} className="flex items-center gap-1.5 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-bold">
           <Plus size={14} /> Добавить
         </button>
       </div>
 
+      <div className="relative">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Поиск по названию, артикулу, категории, авто..."
+          className="input w-full pl-9"
+        />
+        {query && (
+          <button onClick={() => setQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1" aria-label="Очистить">
+            <X size={14} />
+          </button>
+        )}
+      </div>
+
       <div className="grid gap-3">
-        {parts.map((p) => (
+        {filtered.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-8">Ничего не найдено</p>
+        ) : filtered.map((p) => (
           <div key={p.id} className="bg-card border border-border rounded-xl p-3 flex items-center gap-3">
             {p.image
               ? <img src={p.image} alt={p.name} className="w-16 h-16 rounded-lg object-cover bg-muted" />
