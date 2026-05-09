@@ -868,27 +868,8 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
   const load = async () => {
     setLoading(true); setError('');
     try {
-      // Ensure we have a fresh, valid session before calling the admin function
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData?.session?.access_token;
-      if (!token) {
-        await supabase.auth.signOut();
-        setError('Сессия истекла. Войдите заново.');
-        return;
-      }
-      const { data, error } = await supabase.functions.invoke('list-admin-emails', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (error) {
-        const msg = error instanceof Error ? error.message : String(error);
-        if (msg.includes('401') || /unauthor/i.test(msg)) {
-          await supabase.auth.signOut();
-          setError('Сессия истекла. Войдите заново.');
-          return;
-        }
-        throw error;
-      }
-      setUsers((data as { users: AdminUser[] }).users ?? []);
+      const data = await callAdminFunction<{ users: AdminUser[] }>('list-admin-emails');
+      setUsers(data.users ?? []);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Ошибка загрузки');
     } finally {
@@ -907,11 +888,7 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
     }
     setBusy(true);
     try {
-      const { data, error } = await supabase.functions.invoke('manage-admins', {
-        body: { action: 'create', email: loginToEmail(newEmail), password: newPass },
-      });
-      if (error) throw error;
-      if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
+      await callAdminFunction('manage-admins', { action: 'create', email: loginToEmail(newEmail), password: newPass });
       toast.success('Админ создан');
       setNewEmail(''); setNewPass('');
       await load();
@@ -927,11 +904,7 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
     if (pass.length < 6) { toast.error('Пароль ≥ 6 символов'); return; }
     setBusy(true);
     try {
-      const { data, error } = await supabase.functions.invoke('manage-admins', {
-        body: { action: 'update-password', userId, password: pass },
-      });
-      if (error) throw error;
-      if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
+      await callAdminFunction('manage-admins', { action: 'update-password', userId, password: pass });
       toast.success('Пароль обновлён');
       setPwDraft((p) => ({ ...p, [userId]: '' }));
     } catch (e) {
@@ -945,11 +918,7 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
     if (!confirm(`Удалить аккаунт ${emailToLogin(email)}?`)) return;
     setBusy(true);
     try {
-      const { data, error } = await supabase.functions.invoke('manage-admins', {
-        body: { action: 'delete', userId },
-      });
-      if (error) throw error;
-      if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
+      await callAdminFunction('manage-admins', { action: 'delete', userId });
       toast.success('Удалено');
       await load();
     } catch (e) {
