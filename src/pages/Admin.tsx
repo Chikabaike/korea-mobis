@@ -26,8 +26,7 @@ const emailToLogin = (e: string) => {
 
 
 const Login = () => {
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
-  const [email, setEmail] = useState('');
+  const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -36,18 +35,9 @@ const Login = () => {
     e.preventDefault();
     setError(''); setBusy(true);
     try {
-      if (mode === 'login') {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email, password,
-          options: { emailRedirectTo: `${window.location.origin}/admin` },
-        });
-        if (error) throw error;
-        toast.success('Аккаунт создан. Если потребуется, подтвердите email и войдите.');
-        setMode('login');
-      }
+      const email = loginToEmail(login);
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Ошибка';
       setError(msg);
@@ -64,24 +54,26 @@ const Login = () => {
             <Lock size={20} className="text-primary" />
           </div>
           <h1 className="text-xl font-black text-foreground">Админ-панель</h1>
-          <p className="text-xs text-muted-foreground">Вход для владельца</p>
+          <p className="text-xs text-muted-foreground">Вход для админов</p>
         </div>
         <input
-          type="email" autoFocus required value={email}
-          onChange={(e) => { setEmail(e.target.value); setError(''); }}
-          placeholder="Email"
+          type="text" autoFocus required value={login}
+          onChange={(e) => { setLogin(e.target.value); setError(''); }}
+          placeholder="Логин"
+          autoComplete="username"
           className="w-full bg-muted border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <input
           type="password" required minLength={6} value={password}
           onChange={(e) => { setPassword(e.target.value); setError(''); }}
           placeholder="Пароль (мин. 6 символов)"
+          autoComplete="current-password"
           className="w-full bg-muted border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
         {error && <p className="text-xs text-destructive text-center">{error}</p>}
         <button type="submit" disabled={busy} className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-lg text-sm hover:opacity-90 transition disabled:opacity-50 flex items-center justify-center gap-2">
           {busy && <Loader2 size={14} className="animate-spin" />}
-          {mode === 'login' ? 'Войти' : 'Создать аккаунт'}
+          Войти
         </button>
         <Link to="/" className="flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground">
           <ArrowLeft size={12} /> На сайт
@@ -90,6 +82,7 @@ const Login = () => {
     </div>
   );
 };
+
 
 /* ============================ TABS ============================ */
 
