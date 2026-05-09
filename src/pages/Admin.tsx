@@ -959,7 +959,7 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
           <table className="w-full text-sm">
             <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
               <tr>
-                <th className="text-left px-4 py-3 font-bold">Email</th>
+                <th className="text-left px-4 py-3 font-bold">Логин</th>
                 <th className="text-left px-4 py-3 font-bold">Создан</th>
                 <th className="text-left px-4 py-3 font-bold">Последний вход</th>
                 {isSuper && <th className="text-left px-4 py-3 font-bold">Управление</th>}
