@@ -854,13 +854,13 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
 
   const createAdmin = async () => {
     if (!newEmail.trim() || newPass.length < 6) {
-      toast.error('Нужен email и пароль ≥ 6 символов');
+      toast.error('Нужен логин и пароль ≥ 6 символов');
       return;
     }
     setBusy(true);
     try {
       const { data, error } = await supabase.functions.invoke('manage-admins', {
-        body: { action: 'create', email: newEmail.trim(), password: newPass },
+        body: { action: 'create', email: loginToEmail(newEmail), password: newPass },
       });
       if (error) throw error;
       if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
