@@ -13,9 +13,20 @@ const FUELS: FuelType[] = ['Бензин', 'Дизель', 'LPG/LPI', 'Hybrid'];
 
 /* ============================ AUTH ============================ */
 
+const LOGIN_DOMAIN = 'admin.local';
+const loginToEmail = (v: string) => {
+  const s = v.trim();
+  if (!s) return '';
+  return s.includes('@') ? s.toLowerCase() : `${s.toLowerCase()}@${LOGIN_DOMAIN}`;
+};
+const emailToLogin = (e: string) => {
+  if (!e) return '';
+  return e.endsWith(`@${LOGIN_DOMAIN}`) ? e.slice(0, -(LOGIN_DOMAIN.length + 1)) : e;
+};
+
+
 const Login = () => {
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
-  const [email, setEmail] = useState('');
+  const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -24,18 +35,9 @@ const Login = () => {
     e.preventDefault();
     setError(''); setBusy(true);
     try {
-      if (mode === 'login') {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email, password,
-          options: { emailRedirectTo: `${window.location.origin}/admin` },
-        });
-        if (error) throw error;
-        toast.success('Аккаунт создан. Если потребуется, подтвердите email и войдите.');
-        setMode('login');
-      }
+      const email = loginToEmail(login);
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Ошибка';
       setError(msg);
@@ -52,24 +54,26 @@ const Login = () => {
             <Lock size={20} className="text-primary" />
           </div>
           <h1 className="text-xl font-black text-foreground">Админ-панель</h1>
-          <p className="text-xs text-muted-foreground">Вход для владельца</p>
+          <p className="text-xs text-muted-foreground">Вход для админов</p>
         </div>
         <input
-          type="email" autoFocus required value={email}
-          onChange={(e) => { setEmail(e.target.value); setError(''); }}
-          placeholder="Email"
+          type="text" autoFocus required value={login}
+          onChange={(e) => { setLogin(e.target.value); setError(''); }}
+          placeholder="Логин"
+          autoComplete="username"
           className="w-full bg-muted border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <input
           type="password" required minLength={6} value={password}
           onChange={(e) => { setPassword(e.target.value); setError(''); }}
           placeholder="Пароль (мин. 6 символов)"
+          autoComplete="current-password"
           className="w-full bg-muted border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
         {error && <p className="text-xs text-destructive text-center">{error}</p>}
         <button type="submit" disabled={busy} className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-lg text-sm hover:opacity-90 transition disabled:opacity-50 flex items-center justify-center gap-2">
           {busy && <Loader2 size={14} className="animate-spin" />}
-          {mode === 'login' ? 'Войти' : 'Создать аккаунт'}
+          Войти
         </button>
         <Link to="/" className="flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground">
           <ArrowLeft size={12} /> На сайт
@@ -78,6 +82,7 @@ const Login = () => {
     </div>
   );
 };
+
 
 /* ============================ TABS ============================ */
 
@@ -849,13 +854,13 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
 
   const createAdmin = async () => {
     if (!newEmail.trim() || newPass.length < 6) {
-      toast.error('Нужен email и пароль ≥ 6 символов');
+      toast.error('Нужен логин и пароль ≥ 6 символов');
       return;
     }
     setBusy(true);
     try {
       const { data, error } = await supabase.functions.invoke('manage-admins', {
-        body: { action: 'create', email: newEmail.trim(), password: newPass },
+        body: { action: 'create', email: loginToEmail(newEmail), password: newPass },
       });
       if (error) throw error;
       if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
@@ -889,7 +894,7 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
   };
 
   const removeAdmin = async (userId: string, email: string) => {
-    if (!confirm(`Удалить аккаунт ${email}?`)) return;
+    if (!confirm(`Удалить аккаунт ${emailToLogin(email)}?`)) return;
     setBusy(true);
     try {
       const { data, error } = await supabase.functions.invoke('manage-admins', {
@@ -925,7 +930,7 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
           <div className="text-sm font-bold">Добавить нового админа</div>
           <div className="grid sm:grid-cols-[1fr_1fr_auto] gap-2">
             <input
-              type="email" placeholder="Email"
+              type="text" placeholder="Логин"
               value={newEmail} onChange={(e) => setNewEmail(e.target.value)}
               className="input"
             />
@@ -954,7 +959,7 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
           <table className="w-full text-sm">
             <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
               <tr>
-                <th className="text-left px-4 py-3 font-bold">Email</th>
+                <th className="text-left px-4 py-3 font-bold">Логин</th>
                 <th className="text-left px-4 py-3 font-bold">Создан</th>
                 <th className="text-left px-4 py-3 font-bold">Последний вход</th>
                 {isSuper && <th className="text-left px-4 py-3 font-bold">Управление</th>}
@@ -969,7 +974,7 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
                   <tr key={u.id} className="border-t border-border">
                     <td className="px-4 py-3 font-semibold">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span>{u.email || '—'}</span>
+                        <span>{emailToLogin(u.email) || '—'}</span>
                         {isThisSuper && (
                           <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-primary text-primary-foreground">
                             Главный
@@ -1047,7 +1052,7 @@ const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }
             <h1 className="font-black text-lg truncate">Админ-панель MOBIS</h1>
           </div>
           <div className="flex items-center gap-3">
-            <span className="hidden sm:inline text-xs text-muted-foreground truncate max-w-[180px]">{email}</span>
+            <span className="hidden sm:inline text-xs text-muted-foreground truncate max-w-[180px]">{emailToLogin(email)}</span>
             <button onClick={onLogout} className="flex items-center gap-1.5 text-xs font-bold uppercase text-muted-foreground hover:text-foreground">
               <LogOut size={14} /> Выйти
             </button>
