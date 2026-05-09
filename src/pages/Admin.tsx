@@ -1025,13 +1025,18 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
 const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }) => {
   const [tab, setTab] = useState<Tab>('parts');
   const { loading } = useStore();
+  const isSuper = isSuperAdminEmail(email);
   const tabs: { id: Tab; label: string }[] = [
     { id: 'parts', label: 'Запчасти' },
     { id: 'categories', label: 'Категории' },
     { id: 'cars', label: 'Авто' },
     { id: 'settings', label: 'Настройки' },
-    { id: 'admins', label: 'Админы' },
+    ...(isSuper ? [{ id: 'admins' as Tab, label: 'Админы' }] : []),
   ];
+
+  useEffect(() => {
+    if (!isSuper && tab === 'admins') setTab('parts');
+  }, [isSuper, tab]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -1069,7 +1074,7 @@ const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }
             {tab === 'categories' && <CategoriesTab />}
             {tab === 'cars' && <CarsTab />}
             {tab === 'settings' && <SettingsTab />}
-            {tab === 'admins' && <AdminsTab currentEmail={email} />}
+            {tab === 'admins' && isSuper && <AdminsTab currentEmail={email} />}
           </>
         )}
       </main>
