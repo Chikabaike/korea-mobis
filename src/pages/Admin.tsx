@@ -24,6 +24,36 @@ const emailToLogin = (e: string) => {
   return e.endsWith(`@${LOGIN_DOMAIN}`) ? e.slice(0, -(LOGIN_DOMAIN.length + 1)) : e;
 };
 
+const callAdminFunction = async <T,>(functionName: string, body?: Record<string, unknown>): Promise<T> => {
+  const { data: refreshed, error: refreshError } = await supabase.auth.refreshSession();
+  const token = refreshed.session?.access_token;
+  if (refreshError || !token) {
+    await supabase.auth.signOut();
+    throw new Error('Сессия истекла. Войдите заново.');
+  }
+
+  const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${functionName}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+
+  const text = await response.text();
+  const payload = text ? JSON.parse(text) : null;
+  if (!response.ok) {
+    if (response.status === 401) {
+      await supabase.auth.signOut();
+      throw new Error('Сессия истекла. Войдите заново.');
+    }
+    throw new Error(String((payload as { error?: unknown } | null)?.error ?? `Ошибка ${response.status}`));
+  }
+  return payload as T;
+};
+
 
 const Login = () => {
   const [login, setLogin] = useState('');
