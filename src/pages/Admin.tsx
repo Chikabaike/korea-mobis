@@ -1052,7 +1052,7 @@ const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }
             <h1 className="font-black text-lg truncate">Админ-панель MOBIS</h1>
           </div>
           <div className="flex items-center gap-3">
-            <span className="hidden sm:inline text-xs text-muted-foreground truncate max-w-[180px]">{email}</span>
+            <span className="hidden sm:inline text-xs text-muted-foreground truncate max-w-[180px]">{emailToLogin(email)}</span>
             <button onClick={onLogout} className="flex items-center gap-1.5 text-xs font-bold uppercase text-muted-foreground hover:text-foreground">
               <LogOut size={14} /> Выйти
             </button>
