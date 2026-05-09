@@ -894,7 +894,7 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
   };
 
   const removeAdmin = async (userId: string, email: string) => {
-    if (!confirm(`Удалить аккаунт ${email}?`)) return;
+    if (!confirm(`Удалить аккаунт ${emailToLogin(email)}?`)) return;
     setBusy(true);
     try {
       const { data, error } = await supabase.functions.invoke('manage-admins', {
