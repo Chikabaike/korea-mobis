@@ -930,7 +930,7 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
           <div className="text-sm font-bold">Добавить нового админа</div>
           <div className="grid sm:grid-cols-[1fr_1fr_auto] gap-2">
             <input
-              type="email" placeholder="Email"
+              type="text" placeholder="Логин"
               value={newEmail} onChange={(e) => setNewEmail(e.target.value)}
               className="input"
             />
