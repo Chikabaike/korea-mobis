@@ -7,17 +7,19 @@ import PartDetailsModal from './PartDetailsModal';
 import type { CarPart } from '../types';
 import { PackageSearch } from 'lucide-react';
 
+type SortOption = 'popularity' | 'price' | 'relevance';
+
 const Catalog = () => {
   const { filters } = useFilter();
   const { t } = useLanguage();
   const [selected, setSelected] = useState<CarPart | null>(null);
+  const [sort, setSort] = useState<SortOption>('popularity');
 
   const { parts } = useStore();
 
   const filtered = useMemo(() => {
-    return parts.filter((p) => {
+    const result = parts.filter((p) => {
       if (filters.fuel && !p.compatibility.includes(filters.fuel)) return false;
-      // Фильтр по авто: если у запчасти не указаны cars — считаем универсальной.
       if (filters.brand && p.cars && p.cars.length > 0) {
         const matches = p.cars.some((c) => {
           if (c.brand !== filters.brand) return false;
@@ -34,17 +36,37 @@ const Catalog = () => {
       }
       return true;
     });
-  }, [filters, parts]);
+
+    const sorted = [...result];
+    if (sort === 'price') {
+      sorted.sort((a, b) => a.price - b.price);
+    } else if (sort === 'relevance') {
+      sorted.reverse();
+    }
+    return sorted;
+  }, [filters, parts, sort]);
 
   const title = filters.brand || filters.fuel || filters.searchQuery ? t.allParts : t.lastParts;
 
   return (
     <div className="space-y-6">
-      <div className="flex items-baseline justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground">{title}</h2>
-        <span className="text-xs text-muted-foreground font-medium">
-          {filtered.length} {filtered.length === 1 ? 'позиция' : 'позиций'}
-        </span>
+        <div className="flex items-center gap-3">
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortOption)}
+            className="bg-muted border border-border rounded-full text-xs font-semibold py-1.5 px-3 outline-none focus:border-primary"
+            aria-label="Сортировка"
+          >
+            <option value="popularity">По популярности</option>
+            <option value="price">По цене</option>
+            <option value="relevance">По актуальности</option>
+          </select>
+          <span className="text-xs text-muted-foreground font-medium">
+            {filtered.length} {filtered.length === 1 ? 'позиция' : 'позиций'}
+          </span>
+        </div>
       </div>
 
       {filtered.length === 0 ? (
