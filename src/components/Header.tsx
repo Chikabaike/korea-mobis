@@ -13,6 +13,7 @@ const Header = () => {
   const { t, language, setLanguage } = useLanguage();
   const { settings } = useStore();
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
   const address = settings.addressRu;
   const workHours = settings.workHoursRu;
 
