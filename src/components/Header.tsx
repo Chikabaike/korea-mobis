@@ -1,4 +1,4 @@
-import { Search, MapPin, Clock, Phone, Wrench, Sun, Moon } from 'lucide-react';
+import { Search, MapPin, Clock, Phone, Wrench, Sun, Moon, Car } from 'lucide-react';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
