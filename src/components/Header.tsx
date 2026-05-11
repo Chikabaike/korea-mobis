@@ -14,6 +14,14 @@ const Header = () => {
   const { settings } = useStore();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
+  const goCatalog = () => {
+    if (location.pathname === '/catalog') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate('/catalog');
+    }
+  };
   const address = settings.addressRu;
   const workHours = settings.workHoursRu;
 
