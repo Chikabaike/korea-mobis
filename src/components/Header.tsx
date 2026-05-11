@@ -1,4 +1,5 @@
 import { Search, MapPin, Clock, Phone, Wrench, Sun, Moon, Car } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
@@ -12,6 +13,7 @@ const Header = () => {
   const { t, language, setLanguage } = useLanguage();
   const { settings } = useStore();
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
   const address = settings.addressRu;
   const workHours = settings.workHoursRu;
 
@@ -90,7 +92,7 @@ const Header = () => {
           <div className="flex-1 max-w-2xl items-center gap-2 hidden md:flex">
             <button
               type="button"
-              onClick={() => document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => navigate('/catalog')}
               className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity shrink-0"
               aria-label={t.catalog || 'Каталог'}
             >

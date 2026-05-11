@@ -6,10 +6,6 @@ import FilterWidget from '@/components/FilterWidget';
 import Catalog from '@/components/Catalog';
 import LatestPartsSection from '@/components/LatestPartsSection';
 import StoreMap from '@/components/StoreMap';
-import { FilterProvider } from '@/context/FilterContext';
-import { LanguageProvider } from '@/context/LanguageContext';
-import { StoreProvider } from '@/context/StoreContext';
-import { ThemeProvider } from '@/context/ThemeContext';
 
 const AppContent = () => {
   const [showLatest, setShowLatest] = useState(false);
@@ -62,16 +58,6 @@ const AppContent = () => {
   );
 };
 
-const Index = () => (
-  <ThemeProvider>
-    <StoreProvider>
-      <LanguageProvider>
-        <FilterProvider>
-          <AppContent />
-        </FilterProvider>
-      </LanguageProvider>
-    </StoreProvider>
-  </ThemeProvider>
-);
+const Index = () => <AppContent />;
 
 export default Index;
