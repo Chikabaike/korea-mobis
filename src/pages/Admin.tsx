@@ -1097,6 +1097,7 @@ const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }
             {tab === 'categories' && <CategoriesTab />}
             {tab === 'cars' && <CarsTab />}
             {tab === 'settings' && <SettingsTab />}
+            {tab === 'visits' && <VisitsTab />}
             {tab === 'admins' && isSuper && <AdminsTab currentEmail={email} />}
           </>
         )}
