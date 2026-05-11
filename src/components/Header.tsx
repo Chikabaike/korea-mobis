@@ -33,7 +33,7 @@ const Header = () => {
     if (clickCountRef.current >= 5) {
       clickCountRef.current = 0;
       if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
-      navigate('/admin');
+      navigate('/mobis');
     }
   };
 
