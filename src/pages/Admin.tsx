@@ -1043,6 +1043,51 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
 };
 
 
+const VisitsTab = () => {
+  const [count, setCount] = useState<number | null>(null);
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const load = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('site_visits')
+      .select('count, updated_at')
+      .eq('id', 1)
+      .maybeSingle();
+    if (!error && data) {
+      setCount(Number(data.count));
+      setUpdatedAt(data.updated_at);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, []);
+
+  return (
+    <div className="max-w-md">
+      <div className="bg-card border border-border rounded-xl p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-bold uppercase text-muted-foreground">Счётчик посещений</h2>
+          <button
+            onClick={load}
+            className="text-xs font-bold uppercase text-muted-foreground hover:text-foreground"
+            disabled={loading}
+          >
+            {loading ? '...' : 'Обновить'}
+          </button>
+        </div>
+        <div className="text-5xl font-black tabular-nums">
+          {loading && count === null ? '—' : (count ?? 0).toLocaleString('ru-RU')}
+        </div>
+        <div className="text-xs text-muted-foreground mt-3">
+          Всего визитов на сайт
+          {updatedAt && <> · обновлено {new Date(updatedAt).toLocaleString('ru-RU')}</>}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }) => {
   const [tab, setTab] = useState<Tab>('parts');
