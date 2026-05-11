@@ -1,6 +1,4 @@
 import { Search, MapPin, Clock, Phone, Wrench, Sun, Moon } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useRef } from 'react';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
@@ -16,26 +14,11 @@ const Header = () => {
   const { theme, toggleTheme } = useTheme();
   const address = settings.addressRu;
   const workHours = settings.workHoursRu;
-  const navigate = useNavigate();
-  const clickCountRef = useRef(0);
-  const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleLogoClick = () => {
-    clickCountRef.current += 1;
-    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
-    clickTimerRef.current = setTimeout(() => {
-      const count = clickCountRef.current;
-      clickCountRef.current = 0;
-      if (count < 5) {
-        window.location.href = '/';
-      }
-    }, 400);
-    if (clickCountRef.current >= 5) {
-      clickCountRef.current = 0;
-      if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
-      navigate('/mobis');
-    }
+    window.location.href = '/';
   };
+
 
   return (
     <header className="bg-card border-b border-border shrink-0">
