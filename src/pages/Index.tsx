@@ -58,16 +58,6 @@ const AppContent = () => {
   );
 };
 
-const Index = () => (
-  <ThemeProvider>
-    <StoreProvider>
-      <LanguageProvider>
-        <FilterProvider>
-          <AppContent />
-        </FilterProvider>
-      </LanguageProvider>
-    </StoreProvider>
-  </ThemeProvider>
-);
+const Index = () => <AppContent />;
 
 export default Index;
