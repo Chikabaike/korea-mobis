@@ -116,7 +116,7 @@ const Login = () => {
 
 /* ============================ TABS ============================ */
 
-type Tab = 'parts' | 'categories' | 'cars' | 'settings' | 'admins';
+type Tab = 'parts' | 'categories' | 'cars' | 'settings' | 'visits' | 'admins';
 
 /* ============================ PARTS ============================ */
 
