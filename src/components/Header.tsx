@@ -1,6 +1,4 @@
 import { Search, MapPin, Clock, Phone, Wrench, Sun, Moon } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useRef } from 'react';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
