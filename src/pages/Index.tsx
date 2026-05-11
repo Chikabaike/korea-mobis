@@ -47,7 +47,9 @@ const AppContent = () => {
             </div>
           )}
 
-          <Catalog />
+          <div id="catalog">
+            <Catalog />
+          </div>
 
           <StoreMap />
         </div>
