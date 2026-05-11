@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Header from '@/components/Header';
+import { supabase } from '@/integrations/supabase/client';
 import PromoBanner from '@/components/PromoBanner';
 import FilterWidget from '@/components/FilterWidget';
 import Catalog from '@/components/Catalog';
@@ -13,6 +14,15 @@ import { ThemeProvider } from '@/context/ThemeContext';
 const AppContent = () => {
   const [showLatest, setShowLatest] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const KEY = 'site_visit_counted';
+    if (sessionStorage.getItem(KEY)) return;
+    sessionStorage.setItem(KEY, '1');
+    supabase.rpc('increment_site_visits').then(({ error }) => {
+      if (error) sessionStorage.removeItem(KEY);
+    });
+  }, []);
 
   const handleGo = () => {
     setShowLatest(true);
