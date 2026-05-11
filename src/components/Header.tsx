@@ -80,16 +80,10 @@ const Header = () => {
           >
             <img
               src={hyundaiKiaLogo}
-              alt="Hyundai Kia"
-              className="h-6 sm:h-8 w-auto object-contain pointer-events-none"
+              alt="Hyundai Kia Mobis"
+              className="h-12 sm:h-16 w-auto object-contain pointer-events-none"
               draggable={false}
             />
-            <div className="text-base sm:text-lg font-black tracking-tight text-foreground leading-none">
-              <span className="text-red-600">КОРЕЯ</span>
-              <span>-M</span>
-              <span className="text-red-600">O</span>
-              <span>BIS</span>
-            </div>
           </button>
 
           {/* Search */}
