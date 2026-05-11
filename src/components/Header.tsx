@@ -92,7 +92,7 @@ const Header = () => {
           <div className="flex-1 max-w-2xl items-center gap-2 hidden md:flex">
             <button
               type="button"
-              onClick={() => document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => navigate('/catalog')}
               className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity shrink-0"
               aria-label={t.catalog || 'Каталог'}
             >
