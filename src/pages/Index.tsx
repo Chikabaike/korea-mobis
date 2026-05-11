@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Header from '@/components/Header';
+import { supabase } from '@/integrations/supabase/client';
 import PromoBanner from '@/components/PromoBanner';
 import FilterWidget from '@/components/FilterWidget';
 import Catalog from '@/components/Catalog';
