@@ -137,7 +137,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   // Realtime sync — invalidate the relevant query
   useEffect(() => {
     const channel = supabase
-      .channel(`store-sync-${Math.random().toString(36).slice(2)}`)
+      .channel('store-sync')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'parts' }, () => qc.invalidateQueries({ queryKey: QK.parts }))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'brands' }, () => qc.invalidateQueries({ queryKey: QK.brands }))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, () => qc.invalidateQueries({ queryKey: QK.categories }))

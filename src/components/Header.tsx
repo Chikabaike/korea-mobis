@@ -1,5 +1,4 @@
-import { Search, MapPin, Clock, Phone, Wrench, Sun, Moon, Car } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Search, MapPin, Clock, Phone, Wrench, Sun, Moon } from 'lucide-react';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
@@ -13,15 +12,6 @@ const Header = () => {
   const { t, language, setLanguage } = useLanguage();
   const { settings } = useStore();
   const { theme, toggleTheme } = useTheme();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const goCatalog = () => {
-    if (location.pathname === '/catalog') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      navigate('/catalog');
-    }
-  };
   const address = settings.addressRu;
   const workHours = settings.workHoursRu;
 
@@ -96,26 +86,15 @@ const Header = () => {
             />
           </button>
 
-          {/* Catalog button + Search */}
-          <div className="flex-1 max-w-2xl items-center gap-2 hidden md:flex">
-            <button
-              type="button"
-              onClick={goCatalog}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity shrink-0"
-              aria-label={t.catalog || 'Каталог'}
-            >
-              <Car size={18} />
-              <span>{t.catalog || 'Каталог'}</span>
-            </button>
-            <div className="flex-1 relative">
-              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <input
-                value={filters.searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t.searchPlaceholder}
-                className="w-full bg-muted border-2 border-primary/60 focus:border-primary focus:bg-card outline-none rounded-full text-sm py-2.5 pl-11 pr-4 transition-all shadow-[0_0_12px_hsl(var(--primary)/0.6),inset_0_0_6px_hsl(var(--primary)/0.25)] focus:shadow-[0_0_22px_hsl(var(--primary)/0.9),inset_0_0_10px_hsl(var(--primary)/0.4)] animate-pulse-glow"
-              />
-            </div>
+          {/* Search */}
+          <div className="flex-1 max-w-xl relative hidden md:block">
+            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <input
+              value={filters.searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t.searchPlaceholder}
+              className="w-full bg-muted border-2 border-primary/60 focus:border-primary focus:bg-card outline-none rounded-full text-sm py-2.5 pl-11 pr-4 transition-all shadow-[0_0_12px_hsl(var(--primary)/0.6),inset_0_0_6px_hsl(var(--primary)/0.25)] focus:shadow-[0_0_22px_hsl(var(--primary)/0.9),inset_0_0_10px_hsl(var(--primary)/0.4)] animate-pulse-glow"
+            />
           </div>
 
           {/* Right meta */}
