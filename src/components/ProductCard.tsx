@@ -40,7 +40,7 @@ const ProductCard = ({ part, onClick }: { part: CarPart; onClick: () => void }) 
             {part.cars.slice(0, 3).map((c, i) => (
               <span
                 key={`${c.brand}-${c.model}-${c.generation ?? 'all'}-${i}`}
-                className="text-[9px] font-semibold px-2 py-0.5 rounded bg-primary/10 text-foreground border border-primary/20"
+                className="font-semibold px-2 py-0.5 bg-primary/10 text-foreground border border-primary/20 text-xs font-serif text-center text-gray-950 bg-slate-50 border-slate-400 rounded-3xl"
               >
                 {c.brand} {c.model}{c.generation ? ` · ${c.generation}` : ''}
               </span>
