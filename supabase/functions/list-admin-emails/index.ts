@@ -5,7 +5,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const SUPER_ADMIN_EMAIL = 'pinkerton.7mailru@gmail.com';
+// Super-admin email is kept server-side only; never exposed to the client bundle.
+const SUPER_ADMIN_EMAIL = (Deno.env.get('SUPER_ADMIN_EMAIL') ?? 'pinkerton.7mailru@gmail.com').toLowerCase();
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
@@ -29,30 +30,35 @@ Deno.serve(async (req) => {
       });
     }
     const callerEmail = (userData.user.email ?? '').toLowerCase();
-    if (callerEmail !== SUPER_ADMIN_EMAIL.toLowerCase()) {
-      return new Response(JSON.stringify({ error: 'Только главный админ может просматривать админов' }), {
-        status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    const isSuper = callerEmail === SUPER_ADMIN_EMAIL;
+
+    // Non-super admins only get their privilege flag, never the full user list.
+    if (!isSuper) {
+      return new Response(JSON.stringify({ isSuper: false, users: [] }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    const users: { id: string; email: string; created_at: string; last_sign_in_at: string | null }[] = [];
+    const users: { id: string; email: string; created_at: string; last_sign_in_at: string | null; isSuper: boolean }[] = [];
     let page = 1;
     while (true) {
       const { data, error } = await admin.auth.admin.listUsers({ page, perPage: 200 });
       if (error) throw error;
       for (const u of data.users) {
+        const email = u.email ?? '';
         users.push({
           id: u.id,
-          email: u.email ?? '',
+          email,
           created_at: u.created_at,
           last_sign_in_at: u.last_sign_in_at ?? null,
+          isSuper: email.toLowerCase() === SUPER_ADMIN_EMAIL,
         });
       }
       if (data.users.length < 200) break;
       page += 1;
     }
 
-    return new Response(JSON.stringify({ users }), {
+    return new Response(JSON.stringify({ isSuper: true, users }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (e) {
