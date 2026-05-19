@@ -1,9 +1,15 @@
+// Local logo overrides — added when user provides a specific logo image.
+import samsungLogo from '@/assets/brands/samsung.png';
+
+const LOCAL: Record<string, string> = {
+  samsung: samsungLogo,
+};
+
 // Maps brand names to logo URLs (Google favicon service — reliable, cached, no key).
 const DOMAINS: Record<string, string> = {
   hyundai: 'hyundai.com',
   kia: 'kia.com',
   genesis: 'genesis.com',
-  samsung: 'renaultsamsungm.com',
   chevrolet: 'chevrolet.com',
   ssangyong: 'smotor.com',
   daewoo: 'gm.com',
@@ -30,6 +36,7 @@ const DOMAINS: Record<string, string> = {
 
 export function getBrandLogo(name: string): string {
   const key = name.trim().toLowerCase().split(/\s|\//)[0];
+  if (LOCAL[key]) return LOCAL[key];
   const domain = DOMAINS[key] ?? `${key}.com`;
   return `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
 }
