@@ -1091,7 +1091,15 @@ const VisitsTab = () => {
 const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }) => {
   const [tab, setTab] = useState<Tab>('parts');
   const { loading } = useStore();
-  const isSuper = isSuperAdminEmail(email);
+  const [isSuper, setIsSuper] = useState(false);
+
+  useEffect(() => {
+    // Privilege flag is determined server-side; never derived from a hardcoded email in the bundle.
+    callAdminFunction<AdminListResponse>('list-admin-emails')
+      .then((d) => setIsSuper(!!d.isSuper))
+      .catch(() => setIsSuper(false));
+  }, []);
+
   const tabs: { id: Tab; label: string }[] = [
     { id: 'parts', label: 'Запчасти' },
     { id: 'categories', label: 'Категории' },
@@ -1142,7 +1150,7 @@ const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }
             {tab === 'cars' && <CarsTab />}
             {tab === 'settings' && <SettingsTab />}
             {tab === 'visits' && <VisitsTab />}
-            {tab === 'admins' && isSuper && <AdminsTab currentEmail={email} />}
+            {tab === 'admins' && isSuper && <AdminsTab />}
           </>
         )}
       </main>
