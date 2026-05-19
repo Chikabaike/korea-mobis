@@ -51,7 +51,7 @@ const Header = () => {
                     aria-label="WhatsApp"
                     className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <img src={whatsappIcon} alt="WhatsApp" className="w-5 h-5 object-cover rounded-[22%]" />
+                    <img src={whatsappIcon} alt="WhatsApp contact" className="w-5 h-5 object-cover rounded-[22%]" />
                   </a>
                   <a
                     href="https://www.instagram.com/koreamobis_4444/"
