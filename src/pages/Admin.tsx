@@ -848,14 +848,14 @@ const WatermarkSettingsBlock = () => {
 
 /* ============================ ADMINS ============================ */
 
-export const SUPER_ADMIN_EMAIL = 'pinkerton.7mailru@gmail.com';
-export const isSuperAdminEmail = (e?: string | null) =>
-  (e ?? '').trim().toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase();
+// Super-admin identity is determined server-side; the email is never embedded in the client bundle.
+type AdminListResponse = { isSuper: boolean; users: AdminUser[] };
 
-type AdminUser = { id: string; email: string; created_at: string; last_sign_in_at: string | null };
+type AdminUser = { id: string; email: string; created_at: string; last_sign_in_at: string | null; isSuper: boolean };
 
-const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
+const AdminsTab = () => {
   const [users, setUsers] = useState<AdminUser[]>([]);
+  const [isSuper, setIsSuper] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
   const [newEmail, setNewEmail] = useState('');
@@ -863,13 +863,12 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
   const [busy, setBusy] = useState(false);
   const [pwDraft, setPwDraft] = useState<Record<string, string>>({});
 
-  const isSuper = isSuperAdminEmail(currentEmail);
-
   const load = async () => {
     setLoading(true); setError('');
     try {
-      const data = await callAdminFunction<{ users: AdminUser[] }>('list-admin-emails');
+      const data = await callAdminFunction<AdminListResponse>('list-admin-emails');
       setUsers(data.users ?? []);
+      setIsSuper(!!data.isSuper);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Ошибка загрузки');
     } finally {
@@ -952,7 +951,7 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
               className="input"
             />
             <input
-              type="text" placeholder="Пароль (мин. 6 символов)"
+              type="password" autoComplete="new-password" placeholder="Пароль (мин. 6 символов)"
               value={newPass} onChange={(e) => setNewPass(e.target.value)}
               className="input"
             />
@@ -986,7 +985,7 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
               {users.length === 0 ? (
                 <tr><td colSpan={isSuper ? 4 : 3} className="px-4 py-6 text-center text-muted-foreground">Нет аккаунтов</td></tr>
               ) : users.map(u => {
-                const isThisSuper = isSuperAdminEmail(u.email);
+                const isThisSuper = u.isSuper;
                 return (
                   <tr key={u.id} className="border-t border-border">
                     <td className="px-4 py-3 font-semibold">
@@ -1005,7 +1004,8 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2 flex-wrap">
                           <input
-                            type="text"
+                            type="password"
+                            autoComplete="new-password"
                             placeholder="Новый пароль"
                             value={pwDraft[u.id] ?? ''}
                             onChange={(e) => setPwDraft((p) => ({ ...p, [u.id]: e.target.value }))}
@@ -1092,7 +1092,15 @@ const VisitsTab = () => {
 const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }) => {
   const [tab, setTab] = useState<Tab>('parts');
   const { loading } = useStore();
-  const isSuper = isSuperAdminEmail(email);
+  const [isSuper, setIsSuper] = useState(false);
+
+  useEffect(() => {
+    // Privilege flag is determined server-side; never derived from a hardcoded email in the bundle.
+    callAdminFunction<AdminListResponse>('list-admin-emails')
+      .then((d) => setIsSuper(!!d.isSuper))
+      .catch(() => setIsSuper(false));
+  }, []);
+
   const tabs: { id: Tab; label: string }[] = [
     { id: 'parts', label: 'Запчасти' },
     { id: 'categories', label: 'Категории' },
@@ -1143,7 +1151,7 @@ const AdminShell = ({ onLogout, email }: { onLogout: () => void; email: string }
             {tab === 'cars' && <CarsTab />}
             {tab === 'settings' && <SettingsTab />}
             {tab === 'visits' && <VisitsTab />}
-            {tab === 'admins' && isSuper && <AdminsTab currentEmail={email} />}
+            {tab === 'admins' && isSuper && <AdminsTab />}
           </>
         )}
       </main>
