@@ -851,10 +851,11 @@ const WatermarkSettingsBlock = () => {
 // Super-admin identity is determined server-side; the email is never embedded in the client bundle.
 type AdminListResponse = { isSuper: boolean; users: AdminUser[] };
 
-type AdminUser = { id: string; email: string; created_at: string; last_sign_in_at: string | null };
+type AdminUser = { id: string; email: string; created_at: string; last_sign_in_at: string | null; isSuper: boolean };
 
-const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
+const AdminsTab = () => {
   const [users, setUsers] = useState<AdminUser[]>([]);
+  const [isSuper, setIsSuper] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
   const [newEmail, setNewEmail] = useState('');
@@ -862,13 +863,12 @@ const AdminsTab = ({ currentEmail }: { currentEmail: string }) => {
   const [busy, setBusy] = useState(false);
   const [pwDraft, setPwDraft] = useState<Record<string, string>>({});
 
-  const isSuper = isSuperAdminEmail(currentEmail);
-
   const load = async () => {
     setLoading(true); setError('');
     try {
-      const data = await callAdminFunction<{ users: AdminUser[] }>('list-admin-emails');
+      const data = await callAdminFunction<AdminListResponse>('list-admin-emails');
       setUsers(data.users ?? []);
+      setIsSuper(!!data.isSuper);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Ошибка загрузки');
     } finally {
