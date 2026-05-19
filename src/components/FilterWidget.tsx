@@ -1,10 +1,93 @@
-import { ChevronDown, RotateCcw, Fuel, ArrowRight } from 'lucide-react';
+import { ChevronDown, RotateCcw, Fuel, ArrowRight, Check } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { useFilter } from '../context/FilterContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
+import { getBrandLogo } from '../lib/brandLogos';
 import type { FuelType } from '../types';
 
 const FUEL_OPTIONS: FuelType[] = ['Бензин', 'Дизель', 'LPG/LPI', 'Hybrid'];
+
+const BrandLogo = ({ name, size = 18 }: { name: string; size?: number }) => (
+  <img
+    src={getBrandLogo(name)}
+    alt=""
+    width={size}
+    height={size}
+    loading="lazy"
+    className="shrink-0 rounded-sm object-contain"
+    onError={(e) => { (e.currentTarget as HTMLImageElement).style.visibility = 'hidden'; }}
+  />
+);
+
+const BrandSelect = ({
+  value,
+  onChange,
+  options,
+  placeholder,
+}: {
+  value: string | null;
+  onChange: (v: string) => void;
+  options: string[];
+  placeholder: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onDoc = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', onDoc);
+    return () => document.removeEventListener('mousedown', onDoc);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative w-full">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label={placeholder}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="w-full flex items-center gap-2 bg-muted border border-border rounded-lg px-4 py-3 pr-10 text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all text-left"
+      >
+        {value ? <BrandLogo name={value} /> : null}
+        <span className={value ? '' : 'text-muted-foreground'}>{value || placeholder}</span>
+        <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+      </button>
+      {open && (
+        <ul
+          role="listbox"
+          className="absolute z-50 mt-1 w-full max-h-72 overflow-auto bg-popover border border-border rounded-lg shadow-lg py-1"
+        >
+          {options.map((o) => {
+            const active = o === value;
+            return (
+              <li key={o}>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={active}
+                  onClick={() => { onChange(o); setOpen(false); }}
+                  className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors ${active ? 'bg-accent/50 font-semibold' : ''}`}
+                >
+                  <BrandLogo name={o} size={20} />
+                  <span className="flex-1">{o}</span>
+                  {active && <Check size={14} className="text-primary" />}
+                </button>
+              </li>
+            );
+          })}
+          {options.length === 0 && (
+            <li className="px-3 py-2 text-sm text-muted-foreground">—</li>
+          )}
+        </ul>
+      )}
+    </div>
+  );
+};
+
 
 const Select = ({
   value,
