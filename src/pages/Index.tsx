@@ -10,6 +10,20 @@ import { FilterProvider } from '@/context/FilterContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { StoreProvider } from '@/context/StoreContext';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { getBrandLogo } from '@/lib/brandLogos';
+import kiaCar from '@/assets/cars/kia.jpg';
+import hyundaiCar from '@/assets/cars/hyundai.jpg';
+import samsungCar from '@/assets/cars/samsung.jpg';
+import chevroletCar from '@/assets/cars/chevrolet.jpg';
+import genesisCar from '@/assets/cars/genesis.jpg';
+
+const BRANDS = [
+  { name: 'KIA', key: 'kia', car: kiaCar },
+  { name: 'HYUNDAI', key: 'hyundai', car: hyundaiCar },
+  { name: 'SAMSUNG', key: 'samsung', car: samsungCar },
+  { name: 'CHEVROLET', key: 'chevrolet', car: chevroletCar },
+  { name: 'GENESIS', key: 'genesis', car: genesisCar },
+];
 
 const AppContent = () => {
   const [showLatest, setShowLatest] = useState(false);
@@ -36,8 +50,33 @@ const AppContent = () => {
       <Header />
 
       <div className="bg-card border-b border-border">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2 text-center text-xs text-muted-foreground sm:text-xl">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 text-center text-base sm:text-2xl font-medium text-muted-foreground">
           Широкий выбор новых и б/у автозапчастей
+        </div>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-4">
+          <ul className="grid grid-cols-5 gap-2 sm:gap-4">
+            {BRANDS.map((b) => (
+              <li key={b.key} className="flex flex-col items-center gap-2">
+                <img
+                  src={getBrandLogo(b.key)}
+                  alt={`${b.name} logo`}
+                  loading="lazy"
+                  className="h-8 sm:h-10 w-auto object-contain"
+                />
+                <img
+                  src={b.car}
+                  alt={`${b.name} последнего поколения`}
+                  loading="lazy"
+                  width={768}
+                  height={512}
+                  className="w-full aspect-[3/2] object-contain rounded-md bg-background"
+                />
+                <span className="text-[10px] sm:text-xs font-semibold tracking-wide text-foreground">
+                  {b.name}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
