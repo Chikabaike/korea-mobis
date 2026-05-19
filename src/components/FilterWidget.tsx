@@ -150,6 +150,8 @@ const FilterWidget = ({
             options={BRANDS.map((b) => b.name)}
             placeholder={t.selectBrand}
           />
+          <Select
+            value={filters.model}
             onChange={(v) => setModel(v || null)}
             options={brand?.models.map((m) => m.name) ?? []}
             placeholder={t.selectModel}
