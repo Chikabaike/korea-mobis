@@ -25,7 +25,7 @@ const Header = () => {
       {/* Top bar */}
       <div className="border-b border-border">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-3 sm:gap-6 py-1.5 text-xs sm:text-sm">
+          <div className="flex items-center justify-between gap-3 sm:gap-6 py-1.5 text-xs font-mono sm:text-lg">
             <div className="flex flex-col gap-0.5 min-w-0">
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-wrap">
                 <a
