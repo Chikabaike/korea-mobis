@@ -35,6 +35,12 @@ const AppContent = () => {
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <Header />
 
+      <div className="bg-card border-b border-border">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2 text-center text-xs sm:text-sm text-muted-foreground">
+          Широкий выбор новых и б/у автозапчастей
+        </div>
+      </div>
+
       <main className="flex-1">
         <div className="mx-auto max-w-7xl p-3 sm:p-6 lg:p-8 space-y-5">
           <h1 className="sr-only">MOBIS — Intellectual Parts System for Hyundai and Kia</h1>
