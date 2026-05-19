@@ -848,9 +848,8 @@ const WatermarkSettingsBlock = () => {
 
 /* ============================ ADMINS ============================ */
 
-export const SUPER_ADMIN_EMAIL = 'pinkerton.7mailru@gmail.com';
-export const isSuperAdminEmail = (e?: string | null) =>
-  (e ?? '').trim().toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase();
+// Super-admin identity is determined server-side; the email is never embedded in the client bundle.
+type AdminListResponse = { isSuper: boolean; users: AdminUser[] };
 
 type AdminUser = { id: string; email: string; created_at: string; last_sign_in_at: string | null };
 
