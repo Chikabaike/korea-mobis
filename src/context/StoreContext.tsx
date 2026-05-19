@@ -233,7 +233,12 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const uploadImage = async (file: File): Promise<string> => {
-    const ext = file.name.split('.').pop() || 'jpg';
+    const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    const ALLOWED_EXT = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    if (!ALLOWED_MIME.includes(file.type) || !ALLOWED_EXT.includes(ext)) {
+      throw new Error('Разрешены только изображения (JPEG, PNG, WebP, GIF)');
+    }
     const path = `${crypto.randomUUID()}.${ext}`;
     const { error } = await supabase.storage.from('part-images').upload(path, file, {
       cacheControl: '3600', upsert: false, contentType: file.type,
