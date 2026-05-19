@@ -217,7 +217,7 @@ const FilterWidget = ({
         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">{t.filters}</h3>
 
         <div className="space-y-3">
-          <Select
+          <BrandSelect
             value={filters.brand}
             onChange={(v) => setBrand(v || null)}
             options={BRANDS.map((b) => b.name)}
