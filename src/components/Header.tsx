@@ -93,6 +93,7 @@ const Header = () => {
               value={filters.searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t.searchPlaceholder}
+              aria-label={t.searchPlaceholder}
               className="w-full bg-muted border-2 border-primary/60 focus:border-primary focus:bg-card outline-none rounded-full text-sm py-2.5 pl-11 pr-4 transition-all shadow-[0_0_12px_hsl(var(--primary)/0.6),inset_0_0_6px_hsl(var(--primary)/0.25)] focus:shadow-[0_0_22px_hsl(var(--primary)/0.9),inset_0_0_10px_hsl(var(--primary)/0.4)] animate-pulse-glow"
             />
           </div>
