@@ -144,14 +144,12 @@ const FilterWidget = ({
     return (
       <div className="flex flex-col xl:flex-row xl:items-end gap-4">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1 min-w-0">
-          <Select
+          <BrandSelect
             value={filters.brand}
             onChange={(v) => setBrand(v || null)}
             options={BRANDS.map((b) => b.name)}
             placeholder={t.selectBrand}
           />
-          <Select
-            value={filters.model}
             onChange={(v) => setModel(v || null)}
             options={brand?.models.map((m) => m.name) ?? []}
             placeholder={t.selectModel}
