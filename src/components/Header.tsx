@@ -60,7 +60,7 @@ const Header = () => {
                     aria-label="Instagram"
                     className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <img src={instagramIcon} alt="Instagram" className="w-5 h-5 object-cover rounded-[22%]" />
+                    <img src={instagramIcon} alt="Instagram profile" className="w-5 h-5 object-cover rounded-[22%]" />
                   </a>
                 </div>
               </div>
