@@ -24,6 +24,7 @@ const Select = ({
       value={value ?? ''}
       onChange={(e) => onChange(e.target.value)}
       disabled={disabled}
+      aria-label={placeholder}
       className="w-full appearance-none bg-muted border border-border rounded-lg px-4 py-3 pr-10 text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all"
     >
       <option value="">{placeholder}</option>
