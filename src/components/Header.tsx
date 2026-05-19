@@ -51,7 +51,7 @@ const Header = () => {
                     aria-label="WhatsApp"
                     className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <img src={whatsappIcon} alt="WhatsApp" className="w-5 h-5 object-cover rounded-[22%]" />
+                    <img src={whatsappIcon} alt="WhatsApp contact" className="w-5 h-5 object-cover rounded-[22%]" />
                   </a>
                   <a
                     href="https://www.instagram.com/koreamobis_4444/"
@@ -60,7 +60,7 @@ const Header = () => {
                     aria-label="Instagram"
                     className="shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    <img src={instagramIcon} alt="Instagram" className="w-5 h-5 object-cover rounded-[22%]" />
+                    <img src={instagramIcon} alt="Instagram profile" className="w-5 h-5 object-cover rounded-[22%]" />
                   </a>
                 </div>
               </div>
@@ -93,6 +93,7 @@ const Header = () => {
               value={filters.searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t.searchPlaceholder}
+              aria-label={t.searchPlaceholder}
               className="w-full bg-muted border-2 border-primary/60 focus:border-primary focus:bg-card outline-none rounded-full text-sm py-2.5 pl-11 pr-4 transition-all shadow-[0_0_12px_hsl(var(--primary)/0.6),inset_0_0_6px_hsl(var(--primary)/0.25)] focus:shadow-[0_0_22px_hsl(var(--primary)/0.9),inset_0_0_10px_hsl(var(--primary)/0.4)] animate-pulse-glow"
             />
           </div>
@@ -141,6 +142,7 @@ const Header = () => {
             value={filters.searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t.searchPlaceholder}
+            aria-label={t.searchPlaceholder}
             className="w-full bg-muted border-2 border-primary/60 focus:border-primary focus:bg-card outline-none rounded-full text-sm py-2.5 pl-11 pr-4 shadow-[0_0_12px_hsl(var(--primary)/0.6),inset_0_0_6px_hsl(var(--primary)/0.25)] focus:shadow-[0_0_22px_hsl(var(--primary)/0.9),inset_0_0_10px_hsl(var(--primary)/0.4)] animate-pulse-glow"
           />
         </div>
