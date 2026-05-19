@@ -951,7 +951,7 @@ const AdminsTab = () => {
               className="input"
             />
             <input
-              type="text" placeholder="Пароль (мин. 6 символов)"
+              type="password" autoComplete="new-password" placeholder="Пароль (мин. 6 символов)"
               value={newPass} onChange={(e) => setNewPass(e.target.value)}
               className="input"
             />
@@ -1004,7 +1004,8 @@ const AdminsTab = () => {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2 flex-wrap">
                           <input
-                            type="text"
+                            type="password"
+                            autoComplete="new-password"
                             placeholder="Новый пароль"
                             value={pwDraft[u.id] ?? ''}
                             onChange={(e) => setPwDraft((p) => ({ ...p, [u.id]: e.target.value }))}
