@@ -6,7 +6,7 @@ const corsHeaders = {
 };
 
 // Super-admin email is kept server-side only; never exposed to the client bundle.
-const SUPER_ADMIN_EMAIL = (Deno.env.get('SUPER_ADMIN_EMAIL') ?? 'pinkerton.7mailru@gmail.com').toLowerCase();
+const SUPER_ADMIN_EMAIL = (Deno.env.get('SUPER_ADMIN_EMAIL') ?? '').toLowerCase();
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
