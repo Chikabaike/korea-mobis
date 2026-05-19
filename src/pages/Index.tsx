@@ -37,6 +37,7 @@ const AppContent = () => {
 
       <main className="flex-1">
         <div className="mx-auto max-w-7xl p-3 sm:p-6 lg:p-8 space-y-5">
+          <h1 className="sr-only">MOBIS — Intellectual Parts System for Hyundai and Kia</h1>
           <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
             <FilterWidget orientation="horizontal" onGo={handleGo} />
           </div>
