@@ -27,7 +27,7 @@ const Header = () => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-3 sm:gap-6 py-1.5 text-xs font-mono sm:text-lg">
             <div className="flex flex-col gap-0.5 min-w-0">
-              <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-wrap">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-wrap text-base">
                 <a
                   href="https://yandex.com/maps/?text=%D0%B3.%D0%91%D0%B8%D1%88%D0%BA%D0%B5%D0%BA%2C%20%D1%81.%20%D0%9D%D0%BE%D0%B2%D0%BE%D0%BF%D0%B0%D0%B2%D0%BB%D0%BE%D0%B2%D0%BA%D0%B0%2C%20%D1%83%D0%BB.%20%D0%A4%D1%80%D1%83%D0%BD%D0%B7%D0%B5%20355"
                   target="_blank"
