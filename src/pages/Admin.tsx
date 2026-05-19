@@ -985,7 +985,7 @@ const AdminsTab = () => {
               {users.length === 0 ? (
                 <tr><td colSpan={isSuper ? 4 : 3} className="px-4 py-6 text-center text-muted-foreground">Нет аккаунтов</td></tr>
               ) : users.map(u => {
-                const isThisSuper = isSuperAdminEmail(u.email);
+                const isThisSuper = u.isSuper;
                 return (
                   <tr key={u.id} className="border-t border-border">
                     <td className="px-4 py-3 font-semibold">
