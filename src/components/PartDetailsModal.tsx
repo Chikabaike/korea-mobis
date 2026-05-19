@@ -24,6 +24,7 @@ const PartDetailsModal = ({ part, onClose }: { part: CarPart; onClose: () => voi
           <img src={part.image} alt={part.name} className="w-full h-48 sm:h-72 lg:h-80 object-contain bg-muted" />
           <button
             onClick={onClose}
+            aria-label="Close"
             className="absolute top-4 right-4 w-10 h-10 rounded-full bg-card/95 backdrop-blur flex items-center justify-center hover:bg-card transition-colors"
           >
             <X size={18} />
