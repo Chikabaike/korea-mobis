@@ -9,9 +9,15 @@ const fuelColor: Record<FuelType, string> = {
 
 const ProductCard = ({ part, onClick }: { part: CarPart; onClick: () => void }) => {
   return (
-    <article
-      onClick={onClick}
-      className="group bg-card rounded-2xl border border-border overflow-hidden cursor-pointer hover:border-primary transition-all duration-300"
+    <a
+      href={`/part/${part.id}`}
+      onClick={(e) => {
+        // Allow Ctrl/Cmd/middle-click to open in a new tab; otherwise show modal in-app.
+        if (e.metaKey || e.ctrlKey || e.shiftKey || (e as unknown as MouseEvent).button === 1) return;
+        e.preventDefault();
+        onClick();
+      }}
+      className="group block bg-card rounded-2xl border border-border overflow-hidden cursor-pointer hover:border-primary transition-all duration-300 no-underline text-inherit"
       style={{ boxShadow: 'var(--shadow-card)' }}
     >
       <div className="aspect-[4/3] bg-muted overflow-hidden relative">
@@ -67,7 +73,7 @@ const ProductCard = ({ part, onClick }: { part: CarPart; onClick: () => void }) 
           </div>
         </div>
       </div>
-    </article>
+    </a>
   );
 };
 
