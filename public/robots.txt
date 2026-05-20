@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://korea-mobis.kg/sitemap.xml
+Sitemap: https://ygfhhltzhmyfxewaddnr.supabase.co/functions/v1/sitemap
